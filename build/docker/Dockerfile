@@ -1,7 +1,7 @@
 # === Builder ==================================================================
 
 FROM golang:1.20 as builder
-WORKDIR /project
+WORKDIR /home/runner/work/synchronise-template-action/synchronise-template-action
 COPY . .
 RUN set -ex; \
     \
@@ -16,8 +16,8 @@ RUN set -ex; \
     \
     apk --no-cache add \
         jq=1.6-r3
-COPY --from=builder /project/build/docker/entrypoint.sh /
-COPY --from=builder /project/build/compare-directories /
+COPY --from=builder /home/runner/work/synchronise-template-action/synchronise-template-action/build/docker/entrypoint.sh /
+COPY --from=builder /home/runner/work/synchronise-template-action/synchronise-template-action/build/compare-directories /
 ENTRYPOINT ["/entrypoint.sh"]
 
 # === Metadata =================================================================
