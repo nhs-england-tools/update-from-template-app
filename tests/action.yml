@@ -6,7 +6,7 @@ runs:
     - id: test-action
       uses: ./
       with:
-        message: "Hello World!"
+        name: "NHS England"
     - run: |
         echo "The time was ${{ steps.test-action.outputs.time }}"
       shell: bash

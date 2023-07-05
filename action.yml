@@ -1,12 +1,12 @@
 name: "Synchronise Template"
 description: "Synchronise repository with the template"
 inputs:
-  message:
-    description: "Message to print"
+  name:
+    description: "Name to print"
     required: true
 outputs:
   time:
-    description: "The time message was printed"
+    description: "The time name was printed"
 runs:
   using: "docker"
   image: ./docker/Dockerfile
