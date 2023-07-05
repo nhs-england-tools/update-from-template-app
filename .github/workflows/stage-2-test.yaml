@@ -27,9 +27,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: "Run action test"
-        id: test-action
         uses: ./tests
-        with:
-          who-to-greet: "NHS England"
-      - run: |
-          echo "The time we greeted you was ${{ steps.test-action.outputs.time }}"

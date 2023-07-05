@@ -1,12 +1,12 @@
-name: "Hello World"
-description: "Greet someone and record the time"
+name: "Synchronise Template"
+description: "Synchronise repository with the template"
 inputs:
-  who-to-greet:
-    description: "Who to greet"
+  message:
+    description: "Message to print"
     required: true
 outputs:
   time:
-    description: "The time we greeted you"
+    description: "The time message was printed"
 runs:
   using: "docker"
   image: ./docker/Dockerfile

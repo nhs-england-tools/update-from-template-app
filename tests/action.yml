@@ -1,17 +1,12 @@
-name: "Hello World Test"
-description: "Greet someone and record the time test"
-inputs:
-  who-to-greet:
-    description: "Who to greet"
-    required: true
-outputs:
-  time:
-    description: "The time we greeted you"
-    value: ${{ steps.test-action.outputs.time }}
+name: "Action Test"
+description: "This is a test of the Synchronise Template action"
 runs:
   using: "composite"
   steps:
     - id: test-action
       uses: ./
       with:
-        who-to-greet: "NHS England"
+        message: "Hello World!"
+    - run: |
+        echo "The time was ${{ steps.test-action.outputs.time }}"
+      shell: bash
