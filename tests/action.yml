@@ -12,6 +12,6 @@ runs:
   using: "composite"
   steps:
     - id: test-action
-      uses: ./tests
+      uses: ./
       with:
         who-to-greet: "NHS England"
