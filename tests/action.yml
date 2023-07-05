@@ -7,11 +7,11 @@ inputs:
 outputs:
   time:
     description: "The time we greeted you"
-    value: ${{ steps.action-test.outputs.time }}
+    value: ${{ steps.test-action.outputs.time }}
 runs:
   using: "composite"
   steps:
-    - id: action-test
+    - id: test-action
       uses: ./tests
       with:
         who-to-greet: "NHS England"
