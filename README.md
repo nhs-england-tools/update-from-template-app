@@ -1,4 +1,4 @@
-# NHS England Tools - Synchronise Template Action
+# Synchronise Template Action
 
 Start with an overview or a brief description of what the project is about and what it does. For example -
 
@@ -14,7 +14,7 @@ Make use of this repository template to expedite your project setup and enhance 
 
 ## Table of Contents
 
-- [NHS England Tools - Synchronise Template Action](#nhs-england-tools---synchronise-template-action)
+- [Synchronise Template Action](#synchronise-template-action)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
