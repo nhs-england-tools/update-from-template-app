@@ -1,0 +1,17 @@
+name: "Hello World Test"
+description: "Greet someone and record the time test"
+inputs:
+  who-to-greet:
+    description: "Who to greet"
+    required: true
+outputs:
+  time:
+    description: "The time we greeted you"
+    value: ${{ steps.action-test.outputs.time }}
+runs:
+  using: "composite"
+  steps:
+    - id: action-test
+      uses: ./tests
+      with:
+        who-to-greet: "NHS England"

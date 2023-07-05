@@ -26,7 +26,10 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v3
-      - name: Run action test
-        uses: ./
+      - name: "Run action test"
+        id: action-test
+        uses: ./tests
         with:
           who-to-greet: "NHS England"
+      - run: |
+          echo "The time we greeted you was ${{ steps.action-test.outputs.time }}"
