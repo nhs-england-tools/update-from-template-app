@@ -17,6 +17,7 @@ jobs:
       build_datetime: ${{ steps.variables.outputs.build_datetime }}
       build_timestamp: ${{ steps.variables.outputs.build_timestamp }}
       build_epoch: ${{ steps.variables.outputs.build_epoch }}
+      golang_version: ${{ steps.variables.outputs.golang_version }}
       version: ${{ steps.variables.outputs.version }}
       does_pull_request_exist: ${{ steps.pr_exists.outputs.does_pull_request_exist }}
     steps:
@@ -29,6 +30,7 @@ jobs:
           echo "build_datetime=$datetime" >> $GITHUB_OUTPUT
           echo "build_timestamp=$(date --date=$datetime -u +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
           echo "build_epoch=$(date --date=$datetime -u +'%s')" >> $GITHUB_OUTPUT
+          echo "golang_version=$(grep golang .tool-versions | cut -f2 -d' ')" >> $GITHUB_OUTPUT
           echo "version=$(cat VERSION)" >> $GITHUB_OUTPUT
       - name: Check if pull request exists for this branch
         id: pr_exists
@@ -50,39 +52,44 @@ jobs:
           export BUILD_TIMESTAMP="${{ steps.variables.outputs.build_timestamp }}"
           export BUILD_EPOCH="${{ steps.variables.outputs.build_epoch }}"
           export VERSION="${{ steps.variables.outputs.version }}"
+          export GOLANG_VERSION="${{ steps.variables.outputs.golang_version }}"
           export DOES_PULL_REQUEST_EXIST="${{ steps.pr_exists.outputs.does_pull_request_exist }}"
           make list-variables
-  # commit-stage: # Recommended maximum execution time is 2 minutes
-  #   needs: [metadata]
-  #   uses: ./.github/workflows/stage-1-commit.yaml
-  #   with:
-  #     build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
-  #     build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
-  #     build_epoch: "${{ needs.metadata.outputs.build_epoch }}"
-  #     version: "${{ needs.metadata.outputs.version }}"
+  commit-stage: # Recommended maximum execution time is 2 minutes
+    needs: [metadata]
+    uses: ./.github/workflows/stage-1-commit.yaml
+    with:
+      build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
+      build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
+      build_epoch: "${{ needs.metadata.outputs.build_epoch }}"
+      golang_version: "${{ needs.metadata.outputs.golang_version }}"
+      version: "${{ needs.metadata.outputs.version }}"
   test-stage: # Recommended maximum execution time is 5 minutes
-    needs: [metadata] #commit-stage
+    needs: [metadata, commit-stage]
     uses: ./.github/workflows/stage-2-test.yaml
     with:
       build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
       build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
       build_epoch: "${{ needs.metadata.outputs.build_epoch }}"
+      golang_version: "${{ needs.metadata.outputs.golang_version }}"
       version: "${{ needs.metadata.outputs.version }}"
-  # build-stage: # Recommended maximum execution time is 3 minutes
-  #   needs: [metadata, test-stage]
-  #   uses: ./.github/workflows/stage-3-build.yaml
-  #   if: needs.metadata.outputs.does_pull_request_exist == 'true' || (github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened'))
-  #   with:
-  #     build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
-  #     build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
-  #     build_epoch: "${{ needs.metadata.outputs.build_epoch }}"
-  #     version: "${{ needs.metadata.outputs.version }}"
-  # acceptance-stage: # Recommended maximum execution time is 10 minutes
-  #   needs: [metadata, build-stage]
-  #   uses: ./.github/workflows/stage-4-acceptance.yaml
-  #   if: needs.metadata.outputs.does_pull_request_exist == 'true' || (github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened'))
-  #   with:
-  #     build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
-  #     build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
-  #     build_epoch: "${{ needs.metadata.outputs.build_epoch }}"
-  #     version: "${{ needs.metadata.outputs.version }}"
+  build-stage: # Recommended maximum execution time is 3 minutes
+    needs: [metadata, test-stage]
+    uses: ./.github/workflows/stage-3-build.yaml
+    if: needs.metadata.outputs.does_pull_request_exist == 'true' || (github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened'))
+    with:
+      build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
+      build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
+      build_epoch: "${{ needs.metadata.outputs.build_epoch }}"
+      golang_version: "${{ needs.metadata.outputs.golang_version }}"
+      version: "${{ needs.metadata.outputs.version }}"
+  acceptance-stage: # Recommended maximum execution time is 10 minutes
+    needs: [metadata, build-stage]
+    uses: ./.github/workflows/stage-4-acceptance.yaml
+    if: needs.metadata.outputs.does_pull_request_exist == 'true' || (github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened'))
+    with:
+      build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
+      build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
+      build_epoch: "${{ needs.metadata.outputs.build_epoch }}"
+      golang_version: "${{ needs.metadata.outputs.golang_version }}"
+      version: "${{ needs.metadata.outputs.version }}"

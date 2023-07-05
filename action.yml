@@ -1,14 +1,19 @@
 name: "Synchronise Template"
 description: "Synchronise repository with the template"
 inputs:
-  name:
-    description: "Name to print"
+  dir1:
+    description: "dir1"
     required: true
-outputs:
-  time:
-    description: "The time name was printed"
+  dir2:
+    description: "dir2"
+    required: true
+# outputs:
+#   time:
+#     description: "The time name was printed"
 runs:
   using: "docker"
   image: ./docker/Dockerfile
   args:
-    - ${{ inputs.name }}
+    - /compare-directories
+    - --dir1=${{ inputs.dir1 }}
+    - --dir2=${{ inputs.dir2 }}

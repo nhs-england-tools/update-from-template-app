@@ -1,7 +1,6 @@
 DOCKER_IMAGE:=ghcr.io/nhs-england-tools/synchronise-template-action
 
 docker-build: # Build Docker image
-	[[ ${PWD} != *docker ]] && cd ./docker
 	docker build \
 		--build-arg IMAGE=${DOCKER_IMAGE} \
 		--build-arg TITLE="Synchronise Template Action" \
@@ -11,17 +10,24 @@ docker-build: # Build Docker image
 		--build-arg GIT_BRANCH=$$(git rev-parse --abbrev-ref HEAD) \
 		--build-arg GIT_COMMIT_HASH=$$(git rev-parse --short HEAD) \
 		--build-arg BUILD_DATE=$$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
-		--build-arg BUILD_VERSION=$$(cat ../VERSION) \
-		--tag ${DOCKER_IMAGE}:$$(cat ../VERSION) \
+		--build-arg BUILD_VERSION=$$(cat VERSION) \
+		--tag ${DOCKER_IMAGE}:$$(cat VERSION) \
 		--rm \
-		--file ./Dockerfile \
+		--file ./build/docker/Dockerfile \
 		.
-	docker tag ${DOCKER_IMAGE}:$$(cat ../VERSION) ${DOCKER_IMAGE}:latest
+	docker tag ${DOCKER_IMAGE}:$$(cat VERSION) ${DOCKER_IMAGE}:latest
 	docker rmi --force $$(docker images | grep "<none>" | awk '{ print $$3 }') 2> /dev/null ||:
 
 docker-test: # Test Docker image
 	docker run --rm ${DOCKER_IMAGE}:$$(cat VERSION) 2>/dev/null \
 		| grep -q "Hello" && echo PASS || echo FAIL
+
+docker-run: # Run Docker image - mandatory: args=[command-line arguments]
+	docker run --rm \
+		--volume $$(PWD)/tests:/tests \
+		${DOCKER_IMAGE}:$$(cat VERSION) \
+		${args} \
+			| jq
 
 docker-clean: # Remove Docker image
 	docker rmi ${DOCKER_IMAGE}:$$(cat VERSION) > /dev/null 2>&1 ||:
@@ -40,5 +46,6 @@ clean:: # Remove resources created by Docker
 	clean \
 	docker-build \
 	docker-clean \
+	docker-run \
 	docker-push \
 	docker-test

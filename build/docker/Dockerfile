@@ -1,12 +1,23 @@
-FROM alpine:3.18.2
+# === Builder ==================================================================
 
+FROM golang:1.20 as builder
+WORKDIR /project
+COPY . .
+RUN set -ex; \
+    \
+    CGO_ENABLED=0 GOOS=linux go build \
+        -a -installsuffix cgo \
+        -o ./build/compare-directories ./cmd/compare-directories/
+
+# === Runtime ==================================================================
+
+FROM alpine:3.18.2
 RUN set -ex; \
     \
     apk --no-cache add \
         jq=1.6-r3
-
-COPY ./entrypoint.sh /entrypoint.sh
-
+COPY --from=builder /project/build/docker/entrypoint.sh /
+COPY --from=builder /project/build/compare-directories /
 ENTRYPOINT ["/entrypoint.sh"]
 
 # === Metadata =================================================================

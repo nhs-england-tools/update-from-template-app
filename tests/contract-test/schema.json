@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/fileInfo"
+      }
+    },
+    "destination": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/fileInfo"
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/comparisonInfo"
+      }
+    }
+  },
+  "definitions": {
+    "fileInfo": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-fA-F0-9]{64}$"
+        },
+        "isText": {
+          "type": "boolean"
+        },
+        "numberOfLines": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": ["path", "size", "date", "hash", "isText", "numberOfLines"]
+    },
+    "comparisonInfo": {
+      "type": "object",
+      "properties": {
+        "match": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        }
+      },
+      "required": ["match"]
+    }
+  }
+}

@@ -15,7 +15,8 @@ runs:
     - id: test-action
       uses: ./
       with:
-        name: "NHS England"
-    - run: |
-        echo "The time was ${{ steps.test-action.outputs.time }}"
-      shell: bash
+        dir1: ./source
+        dir2: ./destination
+    # - run: |
+    #     echo "The time was ${{ steps.test-action.outputs.time }}"
+    #   shell: bash
