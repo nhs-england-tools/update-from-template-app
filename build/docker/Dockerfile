@@ -5,6 +5,9 @@ WORKDIR /home/runner/work/synchronise-template-action/synchronise-template-actio
 COPY . .
 RUN set -ex; \
     \
+    pwd; \
+    ls -la; \
+    \
     CGO_ENABLED=0 GOOS=linux go build \
         -a -installsuffix cgo \
         -o ./build/compare-directories ./cmd/compare-directories/
