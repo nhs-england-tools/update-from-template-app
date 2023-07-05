@@ -12,7 +12,7 @@ inputs:
 #     description: "The time name was printed"
 runs:
   using: "docker"
-  image: ./build/docker/Dockerfile
+  image: ./Dockerfile
   args:
     - /compare-directories
     - --dir1=${{ inputs.dir1 }}

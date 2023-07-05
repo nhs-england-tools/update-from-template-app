@@ -13,7 +13,7 @@ docker-build: # Build Docker image
 		--build-arg BUILD_VERSION=$$(cat VERSION) \
 		--tag ${DOCKER_IMAGE}:$$(cat VERSION) \
 		--rm \
-		--file ./build/docker/Dockerfile \
+		--file ./Dockerfile \
 		.
 	docker tag ${DOCKER_IMAGE}:$$(cat VERSION) ${DOCKER_IMAGE}:latest
 	docker rmi --force $$(docker images | grep "<none>" | awk '{ print $$3 }') 2> /dev/null ||:

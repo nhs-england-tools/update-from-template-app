@@ -19,7 +19,7 @@ RUN set -ex; \
     \
     apk --no-cache add \
         jq=1.6-r3
-COPY --from=builder /home/runner/work/synchronise-template-action/synchronise-template-action/build/docker/entrypoint.sh /
+COPY --from=builder /home/runner/work/synchronise-template-action/synchronise-template-action/entrypoint.sh /
 COPY --from=builder /home/runner/work/synchronise-template-action/synchronise-template-action/build/compare-directories /
 ENTRYPOINT ["/entrypoint.sh"]
 

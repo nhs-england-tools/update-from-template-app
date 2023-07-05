@@ -1,5 +1,5 @@
 include ./scripts/init.mk
-include ./build/docker/include.mk
+include ./scripts/docker.mk
 
 cmd-unit-test: # Run command-line tool unit tests
 	go test -coverprofile=coverage.out  -v ./...
