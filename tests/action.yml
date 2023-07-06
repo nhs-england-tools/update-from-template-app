@@ -1,5 +1,5 @@
-name: "Action Test"
-description: "This is a test of the Synchronise Template action"
+name: "Update From Template Action Test"
+description: "This is a test of the Update From Template Action"
 runs:
   using: "composite"
   steps:
@@ -7,16 +7,27 @@ runs:
       uses: actions/checkout@v3
       with:
         repository: nhs-england-tools/repository-template
-        path: source
-    - name: Checkout this repository
+        path: repository-template
+    - name: Checkout the repository to be updated
       uses: actions/checkout@v3
       with:
-        path: destination
+        path: repository-to-update
+        fetch-depth: 0
+    - shell: bash
+      run: |
+        cd ./repository-to-update
+        git checkout main
     - id: test-action
       uses: ./
       with:
-        dir1: ./source
-        dir2: ./destination
-    # - run: |
-    #     echo "The time was ${{ steps.test-action.outputs.time }}"
-    #   shell: bash
+        dir1: ./repository-template
+        dir2: ./repository-to-update
+    - shell: bash
+      run: |
+          cd ./repository-to-update
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git checkout -b update-from-template
+          git add .
+          git commit -m "Update from template"
+          git push

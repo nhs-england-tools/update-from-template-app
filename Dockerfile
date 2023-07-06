@@ -5,9 +5,6 @@ WORKDIR ${GITHUB_WORKSPACE:-/repository}
 COPY . .
 RUN set -ex; \
     \
-    pwd; \
-    ls -la; \
-    \
     CGO_ENABLED=0 GOOS=linux go build \
         -a -installsuffix cgo \
         -o ./build/compare-directories ./cmd/compare-directories/
@@ -18,6 +15,9 @@ FROM alpine:3.18.2
 RUN set -ex; \
     \
     apk --no-cache add \
+        curl=8.1.2-r0 \
+        git-lfs=3.3.0-r2 \
+        git=2.40.1-r0 \
         jq=1.6-r3
 COPY --from=builder ${GITHUB_WORKSPACE:-/repository}/entrypoint.sh /
 COPY --from=builder ${GITHUB_WORKSPACE:-/repository}/build/compare-directories /

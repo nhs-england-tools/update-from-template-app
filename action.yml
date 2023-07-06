@@ -1,5 +1,5 @@
-name: "Synchronise Template"
-description: "Synchronise repository with the template"
+name: "Update From Template Action"
+description: "Update repository from the template repository"
 inputs:
   dir1:
     description: "dir1"
@@ -7,13 +7,9 @@ inputs:
   dir2:
     description: "dir2"
     required: true
-# outputs:
-#   time:
-#     description: "The time name was printed"
 runs:
   using: "docker"
   image: ./Dockerfile
   args:
-    - /compare-directories
-    - --dir1=${{ inputs.dir1 }}
-    - --dir2=${{ inputs.dir2 }}
+    - ${{ inputs.dir1 }}
+    - ${{ inputs.dir2 }}

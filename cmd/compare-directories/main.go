@@ -34,7 +34,8 @@ type FileInfo struct {
 }
 
 type TextFileComparisonInfo struct {
-	Match int `json:"match"`
+	Exists bool `json:"exists"`
+	Match  int  `json:"match"`
 }
 
 type Result struct {
@@ -143,7 +144,13 @@ func compare(source, destination map[string]FileInfo) Result {
 			}
 			match := 100 - int(float64(levenshteinDistance)/float64(info1.Size)*100)
 			comparison[file] = TextFileComparisonInfo{
-				Match: match,
+				Exists: true,
+				Match:  match,
+			}
+		} else {
+			comparison[file] = TextFileComparisonInfo{
+				Exists: false,
+				Match:  0,
 			}
 		}
 	}

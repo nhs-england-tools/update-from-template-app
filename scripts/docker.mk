@@ -2,6 +2,7 @@ DOCKER_IMAGE:=ghcr.io/nhs-england-tools/synchronise-template-action
 
 docker-build: # Build Docker image
 	docker build \
+		--progress=plain \
 		--build-arg IMAGE=${DOCKER_IMAGE} \
 		--build-arg TITLE="Synchronise Template Action" \
 		--build-arg DESCRIPTION="Synchronise Template Action" \
@@ -26,8 +27,7 @@ docker-run: # Run Docker image - mandatory: args=[command-line arguments]
 	docker run --rm \
 		--volume $$(PWD)/tests:/tests \
 		${DOCKER_IMAGE}:$$(cat VERSION) \
-		${args} \
-			| jq
+		${args}
 
 docker-clean: # Remove Docker image
 	docker rmi ${DOCKER_IMAGE}:$$(cat VERSION) > /dev/null 2>&1 ||:
