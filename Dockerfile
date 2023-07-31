@@ -15,10 +15,10 @@ FROM alpine:3.18.2
 RUN set -ex; \
     \
     apk --no-cache add \
-        curl=8.1.2-r0 \
-        git-lfs=3.3.0-r2 \
-        git=2.40.1-r0 \
-        jq=1.6-r3
+        curl \
+        git-lfs \
+        git \
+        jq
 COPY --from=builder ${GITHUB_WORKSPACE:-/repository}/entrypoint.sh /
 COPY --from=builder ${GITHUB_WORKSPACE:-/repository}/build/compare-directories /
 ENTRYPOINT ["/entrypoint.sh"]
