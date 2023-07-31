@@ -53,4 +53,5 @@ runs:
       with:
         path: ./repository-to-update
         branch: update-from-template
+        base: main
         token: ${{ steps.generate-token.outputs.token }}
