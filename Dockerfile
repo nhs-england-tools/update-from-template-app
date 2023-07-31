@@ -16,8 +16,9 @@ RUN set -ex; \
     \
     apk --no-cache add \
         curl \
-        git-lfs \
         git \
+        git-lfs \
+        github-cli \
         jq
 COPY --from=builder ${GITHUB_WORKSPACE:-/repository}/entrypoint.sh /
 COPY --from=builder ${GITHUB_WORKSPACE:-/repository}/build/compare-directories /

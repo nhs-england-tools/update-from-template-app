@@ -47,11 +47,4 @@ runs:
         git add -A
         git commit -m "Update from template"
         git push -u origin update-from-template
-
-    - name: "Create Pull Request"
-      uses: peter-evans/create-pull-request@v5
-      with:
-        path: ./repository-to-update
-        branch: update-from-template
-        base: main
-        token: ${{ steps.generate-token.outputs.token }}
+        gh pr create --title "Update from template"
