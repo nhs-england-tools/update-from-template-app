@@ -49,4 +49,4 @@ runs:
         git add -A
         git commit -m "Update from template"
         git push -u origin update-from-template
-        gh pr create --title "Update from template"
+        gh pr create --title "Update from template" --body "Update from template"
