@@ -28,6 +28,17 @@ runs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git checkout -b update-from-template
+          date +%s > test.txt
           git add .
           git commit -m "Update from template"
-          git push --set-upstream origin update-from-template
+    - name: "Generate token"
+      id: generate_token
+      uses: tibdex/github-app-token@v1
+      with:
+        app_id: ${{ secrets.UPDATE_FROM_TEMPLATE_APP_ID }}
+        private_key: ${{ secrets.UPDATE_FROM_TEMPLATE_PRIVATE_KEY }}
+    - name: "Create Pull Request"
+      uses: peter-evans/create-pull-request@v5
+      with:
+        path: ./repository-to-update
+        token: ${{ steps.generate_token.outputs.token }}
