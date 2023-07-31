@@ -26,8 +26,9 @@ set +e
 
 # ==============================================================================
 
-exit_code=0
+# SEE: https://hub.docker.com/r/mstruebing/editorconfig-checker/tags, use the `linux/amd64` os/arch
 image_version=2.7.0@sha256:0f8f8dd4f393d29755bef2aef4391d37c34e358d676e9d66ce195359a9c72ef3
+exit_code=0
 
 # ==============================================================================
 
@@ -37,7 +38,7 @@ function main() {
 
     # Check all files
     docker run --rm --platform linux/amd64 \
-      --volume=$PWD:/check \
+      --volume $PWD:/check \
       mstruebing/editorconfig-checker:$image_version \
         ec \
           --exclude '.git/'

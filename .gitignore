@@ -1,4 +1,6 @@
-cve-scan*.json
-sbom-spdx*.json
+.scannerwork
+*sbom-report*.json
+*vulnerabilities-report*.json
+
 *.code-workspace
 !project.code-workspace
