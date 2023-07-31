@@ -73,6 +73,9 @@ jobs:
       build_epoch: "${{ needs.metadata.outputs.build_epoch }}"
       golang_version: "${{ needs.metadata.outputs.golang_version }}"
       version: "${{ needs.metadata.outputs.version }}"
+    secrets:
+      UPDATE_FROM_TEMPLATE_GH_APP_ID: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_ID }}"
+      UPDATE_FROM_TEMPLATE_GH_APP_PRIVATE_KEY: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_PRIVATE_KEY }}"
   build-stage: # Recommended maximum execution time is 3 minutes
     needs: [metadata, test-stage]
     uses: ./.github/workflows/stage-3-build.yaml

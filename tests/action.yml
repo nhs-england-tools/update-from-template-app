@@ -1,5 +1,12 @@
 name: "Update From Template Action Test"
 description: "This is a test of the Update From Template Action"
+inputs:
+  gh-app-id:
+    description: "GitHub App ID"
+    required: true
+  gh-app-private-key:
+    description: "GitHub App private key"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -32,13 +39,13 @@ runs:
           git add .
           git commit -m "Update from template"
     - name: "Generate token"
-      id: generate_token
+      id: generate-token
       uses: tibdex/github-app-token@v1
       with:
-        app_id: ${{ secrets.UPDATE_FROM_TEMPLATE_APP_ID }}
-        private_key: ${{ secrets.UPDATE_FROM_TEMPLATE_PRIVATE_KEY }}
+        app_id: ${{ inputs.gh-app-id }}
+        private_key: ${{ inputs.gh-app-private-key }}
     - name: "Create Pull Request"
       uses: peter-evans/create-pull-request@v5
       with:
         path: ./repository-to-update
-        token: ${{ steps.generate_token.outputs.token }}
+        token: ${{ steps.generate-token.outputs.token }}
