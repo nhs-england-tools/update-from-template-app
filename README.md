@@ -1,20 +1,10 @@
-# Update From Template Action
+# Update from Template Action
 
-Start with an overview or a brief description of what the project is about and what it does. For example -
-
-Welcome to our repository template designed to streamline your project setup! This robust template provides a reliable starting point for your new projects, covering an essential tech stack and encouraging best practices in documenting.
-
-This repository template aims to foster a user-friendly development environment by ensuring that every included file is concise and adequately self-documented. By adhering to this standard, we can promote increased clarity and maintainability throughout your project's lifecycle. Bundled within this template are resources that pave the way for seamless repository creation. Our supported tech stack includes:
-
-- Terraform
-- Python
-- Node.js
-
-Make use of this repository template to expedite your project setup and enhance your productivity right from the get-go. Enjoy the advantage of having a well-structured, self-documented project that reduces overhead and increases focus on what truly matters - coding!
+The Update from Template Action is a powerful GitHub Action designed to propagate changes made in a template repository to all repositories created from it. This action is particularly beneficial for maintaining consistency across multiple repositories, which were initially set up using the [template repository](https://github.com/nhs-england-tools/repository-template) in the NHS England GitHub organisations. This ensures that improvements, fixes or any updates to the template repository are automatically synchronised across all linked repositories, enhancing maintainability, ensuring consistency and helping with governance.
 
 ## Table of Contents
 
-- [Update From Template Action](#update-from-template-action)
+- [Update from Template Action](#update-from-template-action)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
@@ -66,7 +56,7 @@ After a successful installation, provide an informative example of how this proj
 
 The [C4 model](https://c4model.com/) is a simple and intuitive way to create software architecture diagrams that are clear, consistent, scalable and most importantly collaborative. This should result in documenting all the system interfaces, external dependencies and integration points.
 
-![Repository Template](./docs/diagrams/Repository_Template_GitHub_Generic.png)
+![Repository Template](./docs/diagrams/Update_from_Template-High_level_design.png)
 
 ### Configuration
 
@@ -84,7 +74,7 @@ Describe or link templates on how to raise an issue, feature request or make a c
 
 ## Contacts
 
-Provide a way to contact the owners of this project. It can be a team, an individual or information on the means of getting in touch via active communication channels, e.g. opening a GitHub discussion, raising an issue, etc.
+- [Dan Stefaniuk](https://github.com/stefaniuk)
 
 ## Licence
 
