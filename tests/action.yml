@@ -61,4 +61,6 @@ runs:
         GH_TOKEN: ${{ github.token }}
       run: |
         cd ./repository-to-update
-        gh pr create --title "Update from template" --body "Update from template"
+        gh pr create \
+          --title "Update from template ${{ inputs.build_datetime }}" \
+          --body "Update from template ${{ inputs.build_datetime }}"
