@@ -2,28 +2,34 @@
 
 set -e
 
-# Count lines of code of this repository.
+# Pre-commit git hook to check format Terraform code.
 #
 # Usage:
-#   $ ./cloc-repository.sh
+#   $ ./check-terraform-format.sh
 #
 # Options:
+#   CHECK_ONLY=true # Do not format, run check only, default is `false`
 #   VERBOSE=true    # Show all the executed commands, default is `false`
-#   FORMAT=[format] # Set output format [default,cloc-xml,sloccount,json], default is `default`
 
 # ==============================================================================
 
-# SEE: https://github.com/make-ops-tools/gocloc/pkgs/container/gocloc, use the `linux/amd64` os/arch
-image_version=latest@sha256:6888e62e9ae693c4ebcfed9f1d86c70fd083868acb8815fe44b561b9a73b5032
+versions=$(git rev-parse --show-toplevel)/.tool-versions
+terraform_version=$(grep terraform $versions | cut -f2 -d' ')
+image_version=${terraform_version:-latest}
 
 # ==============================================================================
 
 function main() {
 
+  opts=
+  if is-arg-true "$CHECK_ONLY"; then
+    opts="-check"
+  fi
+
   docker run --rm --platform linux/amd64 \
     --volume $PWD:/workdir \
-    ghcr.io/make-ops-tools/gocloc:$image_version \
-      --output-type=${FORMAT:-default} .
+    hashicorp/terraform:$image_version \
+      fmt -recursive $opts
 }
 
 function is-arg-true() {
