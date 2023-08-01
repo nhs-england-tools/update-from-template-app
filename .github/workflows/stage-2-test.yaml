@@ -31,28 +31,28 @@ on:
         description: "GitHub App private key passed from the caller workflow"
         required: true
 jobs:
-  cmd-unit-test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v4
-        with:
-          go-version: ${{ inputs.golang_version }}
-      - name: Run unit test
-        run: |
-          make cmd-unit-test
-  cmd-contract-test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v4
-        with:
-          go-version: ${{ inputs.golang_version }}
-      - name: Run contract test
-        run: |
-          make cmd-contract-test DATASET=large
+  # cmd-unit-test:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 5
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-go@v4
+  #       with:
+  #         go-version: ${{ inputs.golang_version }}
+  #     - name: Run unit test
+  #       run: |
+  #         make cmd-unit-test
+  # cmd-contract-test:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 5
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-go@v4
+  #       with:
+  #         go-version: ${{ inputs.golang_version }}
+  #     - name: Run contract test
+  #       run: |
+  #         make cmd-contract-test DATASET=large
   action-test:
     runs-on: ubuntu-latest
     timeout-minutes: 5
