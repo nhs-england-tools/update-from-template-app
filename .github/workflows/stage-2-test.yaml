@@ -27,7 +27,7 @@ on:
       UPDATE_FROM_TEMPLATE_GH_APP_ID:
         description: "GitHub App ID passed from the caller workflow"
         required: true
-      UPDATE_FROM_TEMPLATE_GH_APP_PRIVATE_KEY:
+      UPDATE_FROM_TEMPLATE_GH_APP_PK:
         description: "GitHub App private key passed from the caller workflow"
         required: true
 jobs:
@@ -61,5 +61,7 @@ jobs:
       - name: "Run action test"
         uses: ./tests
         with:
-          gh-app-id: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_ID }}"
-          gh-app-private-key: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_PRIVATE_KEY }}"
+          build_datetime: ${{ inputs.build_datetime }}
+          build_timestamp: ${{ inputs.build_timestamp }}
+          gh_app_id: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_ID }}"
+          gh_app_pk: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_PK }}"

@@ -1,28 +1,37 @@
 name: "Update From Template Action Test"
 description: "This is a test of the Update From Template Action"
 inputs:
-  gh-app-id:
+  build_datetime:
+    description: "Build datetime, set by the CI/CD pipeline workflow"
+    required: true
+  build_timestamp:
+    description: "Build timestamp, set by the CI/CD pipeline workflow"
+    required: true
+  gh_app_id:
     description: "GitHub App ID"
     required: true
-  gh-app-private-key:
+  gh_app_pk:
     description: "GitHub App private key"
     required: true
 runs:
   using: "composite"
   steps:
 
+    # TODO: Take ownership of this action and bring it to the NHS England Tools GH org
     - name: "Generate token"
       id: generate-token
       uses: tibdex/github-app-token@v1
       with:
-        app_id: ${{ inputs.gh-app-id }}
-        private_key: ${{ inputs.gh-app-private-key }}
+        app_id: ${{ inputs.gh_app_id }}
+        private_key: ${{ inputs.gh_app_pk }}
 
     - name: Checkout the repository template
       uses: actions/checkout@v3
       with:
         repository: nhs-england-tools/repository-template
         path: repository-template
+
+    # TODO: This is going to be a static list of repositories to update, e.g. stored as a flat file in this repository
     - name: Checkout the repository to be updated
       uses: actions/checkout@v3
       with:
@@ -35,18 +44,21 @@ runs:
         cd ./repository-to-update
         git config user.name "${{ github.actor }}"
         git config user.email "${{ github.actor }}@users.noreply.github.com"
-        git checkout -b update-from-template
+        git checkout -b update-from-template-${{ inputs.build_timestamp }}
     - id: test-action
       uses: ./
       with:
         dir1: ./repository-template
         dir2: ./repository-to-update
     - shell: bash
+      run: |
+        cd ./repository-to-update
+        git add -A
+        git commit -m "Update from template ${{ inputs.build_datetime }}"
+        git push -u origin update-from-template-${{ inputs.build_timestamp }}
+    - shell: bash
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
         cd ./repository-to-update
-        git add -A
-        git commit -m "Update from template"
-        git push -u origin update-from-template
         gh pr create --title "Update from template" --body "Update from template"
