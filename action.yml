@@ -13,3 +13,4 @@ runs:
   args:
     - ${{ inputs.dir1 }}
     - ${{ inputs.dir2 }}
+    - /.config.yaml

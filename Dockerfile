@@ -22,6 +22,7 @@ RUN set -ex; \
         jq
 COPY --from=builder ${GITHUB_WORKSPACE:-/repository}/entrypoint.sh /
 COPY --from=builder ${GITHUB_WORKSPACE:-/repository}/build/compare-directories /
+COPY --from=builder ${GITHUB_WORKSPACE:-/repository}/scripts/config/.update-from-template.yaml /.config.yaml
 ENTRYPOINT ["/entrypoint.sh"]
 
 # === Metadata =================================================================

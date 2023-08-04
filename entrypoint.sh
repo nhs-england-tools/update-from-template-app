@@ -1,6 +1,6 @@
 #!/bin/sh -l
 
-/compare-directories --dir1=$1 --dir2=$2 --exclude=.git/ > ./output.txt
+/compare-directories --dir1=$1 --dir2=$2 --cfg=$3 > ./output.txt
 cat ./output.txt
 
 set -x
