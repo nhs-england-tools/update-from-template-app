@@ -5,10 +5,10 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,12 +17,6 @@ import (
 
 	"github.com/agnivade/levenshtein"
 )
-
-type Arguments struct {
-	Dir1    *string
-	Dir2    *string
-	Exclude *string
-}
 
 type FileInfo struct {
 	Path          string    `json:"path"`
@@ -46,9 +40,19 @@ type Result struct {
 
 func main() {
 
-	args := parseArguments()
+	args, err := parseArguments()
+	if err != nil {
+		log.Fatalf("Error while parsing the command-line arguments: %s\n", err)
+	}
 
-	source, destination, err := walk(args.Dir1, args.Dir2, args.Exclude)
+	config, err := readConfig(*args.Cfg)
+	if err != nil {
+		log.Fatalf("Error while reading the config file: %s\n", err)
+	}
+
+	ignore := CompileIgnoreLines(config.Update.Ignore...)
+
+	source, destination, err := walk(args.Dir1, args.Dir2, ignore)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -57,37 +61,18 @@ func main() {
 	printAsJson(result)
 }
 
-func parseArguments() Arguments {
-
-	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-	dir1Ptr := flag.String("dir1", "", "First directory path")
-	dir2Ptr := flag.String("dir2", "", "Second directory path")
-	excludePtr := flag.String("exclude", "", "Directory to exclude")
-	flag.Parse()
-	if *dir1Ptr == "" || *dir2Ptr == "" {
-		fmt.Println("Please provide both directory paths")
-		os.Exit(1)
-	}
-
-	return Arguments{
-		Dir1:    dir1Ptr,
-		Dir2:    dir2Ptr,
-		Exclude: excludePtr,
-	}
-}
-
-func walk(dir1, dir2, exclude *string) (map[string]FileInfo, map[string]FileInfo, error) {
+func walk(dir1, dir2 *string, ignore *GitIgnore) (map[string]FileInfo, map[string]FileInfo, error) {
 
 	source := make(map[string]FileInfo)
 	destination := make(map[string]FileInfo)
 
 	err := filepath.Walk(*dir1, func(path string, info os.FileInfo, err error) error {
-		if *exclude != "" && strings.Contains(path, *exclude) {
-			return nil
-		}
 		if !info.IsDir() {
 			file, _ := filepath.Rel(*dir1, path)
 			if file == "." {
+				return nil
+			}
+			if ignore.MatchesPath(file) {
 				return nil
 			}
 			absPath, _ := filepath.Abs(path)
@@ -104,12 +89,12 @@ func walk(dir1, dir2, exclude *string) (map[string]FileInfo, map[string]FileInfo
 	}
 
 	err = filepath.Walk(*dir2, func(path string, info os.FileInfo, err error) error {
-		if *exclude != "" && strings.Contains(path, *exclude) {
-			return nil
-		}
 		if !info.IsDir() {
 			file, _ := filepath.Rel(*dir2, path)
 			if file == "." {
+				return nil
+			}
+			if ignore.MatchesPath(file) {
 				return nil
 			}
 			absPath, _ := filepath.Abs(path)

@@ -24,8 +24,8 @@ cmd-run: # Run command-line tool - optional: DATASET=[test data set name, defaul
 	./build/compare-directories \
 		-dir1=./tests/data/$(or $(DATASET), small)/dir1 \
 		-dir2=./tests/data/$(or $(DATASET), small)/dir2 \
-		-exclude=.git/ \
-			| jq
+		-cfg=./tests/data/.config.yaml \
+	| jq
 
 clean:: # Clean the project
 	rm -f \

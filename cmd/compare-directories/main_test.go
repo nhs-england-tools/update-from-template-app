@@ -7,34 +7,6 @@ import (
 	"testing"
 )
 
-func TestParseArguments(t *testing.T) {
-
-	t.Run("it should parse dir1 and dir2", func(t *testing.T) {
-		// Arrange
-		os.Args = []string{"cmd", "-dir1=path1", "-dir2=path2"}
-		// Act
-		args := parseArguments()
-		// Assert
-		if *args.Dir1 != "path1" {
-			t.Errorf("Expected Dir1 to be 'path1', got '%s'", *args.Dir1)
-		}
-		if *args.Dir2 != "path2" {
-			t.Errorf("Expected Dir2 to be 'path2', got '%s'", *args.Dir2)
-		}
-	})
-
-	t.Run("it should parse exclude", func(t *testing.T) {
-		// Arrange
-		os.Args = []string{"cmd", "-dir1=path1", "-dir2=path2", "-exclude=path3"}
-		// Act
-		args := parseArguments()
-		// Assert
-		if *args.Exclude != "path3" {
-			t.Errorf("Expected Exclude to be 'path3', got '%s'", *args.Exclude)
-		}
-	})
-}
-
 func TestPopulateInfo(t *testing.T) {
 
 	// Arrange
