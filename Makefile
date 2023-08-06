@@ -8,8 +8,9 @@ cmd-unit-test: # Run command-line tool unit tests
 cmd-contract-test: # Run command-line tool contract test - optional: DATASET=[test data set name, defaults to `small`]
 	# Act
 	go run ./cmd/compare-directories \
-		-dir1=./tests/data/$(or $(DATASET), small)/dir1 \
-		-dir2=./tests/data/$(or $(DATASET), small)/dir2 \
+		--source-dir ./tests/data/$(or $(DATASET), small)/dir1 \
+		--destination-dir ./tests/data/$(or $(DATASET), small)/dir2 \
+		--config-file ./tests/data/.config.yaml \
 			> ./tests/contract-test/output.json
 	# Assert
 	go run ./tests/contract-test \
@@ -22,9 +23,9 @@ cmd-build: # Build command-line tool
 
 cmd-run: # Run command-line tool - optional: DATASET=[test data set name, defaults to `small`]
 	./build/compare-directories \
-		-dir1=./tests/data/$(or $(DATASET), small)/dir1 \
-		-dir2=./tests/data/$(or $(DATASET), small)/dir2 \
-		-cfg=./tests/data/.config.yaml \
+		--source-dir ./tests/data/$(or $(DATASET), small)/dir1 \
+		--destination-dir ./tests/data/$(or $(DATASET), small)/dir2 \
+		--config-file ./tests/data/.config.yaml \
 	| jq
 
 clean:: # Clean the project

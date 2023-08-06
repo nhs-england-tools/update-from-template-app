@@ -7,28 +7,29 @@ import (
 )
 
 type Arguments struct {
-	Dir1 *string
-	Dir2 *string
-	Cfg  *string
+	SourceDirectory      string
+	DestinationDirectory string
+	ConfigurationFile    string
 }
 
-// parseArguments parses the command-line arguments and returns the parsed
-// Arguments structure or an error if the arguments are invalid.
-func parseArguments() (Arguments, error) {
+func parseCommandLineArguments() (*Arguments, error) {
 
 	// Parse command-line arguments
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-	dir1Ptr := flag.String("dir1", "", "First directory path")
-	dir2Ptr := flag.String("dir2", "", "Second directory path")
-	cfgPtr := flag.String("cfg", "", "Configuration file")
+	dir1 := flag.String("source-dir", "", "Source directory")
+	dir2 := flag.String("destination-dir", "", "Destination directory")
+	file := flag.String("config-file", "", "Configuration file")
 	flag.Parse()
-	if *dir1Ptr == "" || *dir2Ptr == "" {
-		return Arguments{}, fmt.Errorf("%s", "Please provide both directory paths")
+	if *dir1 == "" || *dir2 == "" {
+		return &Arguments{}, fmt.Errorf("%s", "Please, provide both directory paths")
+	}
+	if *file == "" {
+		return &Arguments{}, fmt.Errorf("%s", "Please, provide configuration file path")
 	}
 
-	return Arguments{
-		Dir1: dir1Ptr,
-		Dir2: dir2Ptr,
-		Cfg:  cfgPtr,
+	return &Arguments{
+		SourceDirectory:      *dir1,
+		DestinationDirectory: *dir2,
+		ConfigurationFile:    *file,
 	}, nil
 }

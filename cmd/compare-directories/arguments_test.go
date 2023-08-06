@@ -7,28 +7,28 @@ import (
 
 func TestParseArguments(t *testing.T) {
 
-	t.Run("it should parse dir1 and dir2", func(t *testing.T) {
+	t.Run("it should parse source and destination directory arguments", func(t *testing.T) {
 		// Arrange
-		os.Args = []string{"cmd", "--dir1=/path1", "--dir2=/path2"}
+		os.Args = []string{"cmd", "--source-dir=/dir1", "--destination-dir=/dir2", "--config-file=/path/to/yaml"}
 		// Act
-		args, _ := parseArguments()
+		args, _ := parseCommandLineArguments()
 		// Assert
-		if *args.Dir1 != "/path1" {
-			t.Errorf("Expected dir1 to be '/path1', got '%s'", *args.Dir1)
+		if args.SourceDirectory != "/dir1" {
+			t.Errorf("Expected source directory to be '/dir1', got '%s'", args.SourceDirectory)
 		}
-		if *args.Dir2 != "/path2" {
-			t.Errorf("Expected dir2 to be '/path2', got '%s'", *args.Dir2)
+		if args.DestinationDirectory != "/dir2" {
+			t.Errorf("Expected destination directory to be '/dir2', got '%s'", args.DestinationDirectory)
 		}
 	})
 
-	t.Run("it should parse cfg", func(t *testing.T) {
+	t.Run("it should parse configuration file argument", func(t *testing.T) {
 		// Arrange
-		os.Args = []string{"cmd", "--dir1=/path1", "--dir2=/path2", "--cfg=/path/to/cfg"}
+		os.Args = []string{"cmd", "--source-dir=/dir1", "--destination-dir=/dir2", "--config-file=/path/to/yaml"}
 		// Act
-		args, _ := parseArguments()
+		args, _ := parseCommandLineArguments()
 		// Assert
-		if *args.Cfg != "/path/to/cfg" {
-			t.Errorf("Expected cfg to be '/path/to/cfg', got '%s'", *args.Cfg)
+		if args.ConfigurationFile != "/path/to/yaml" {
+			t.Errorf("Expected cfg to be '/path/to/yaml', got '%s'", args.ConfigurationFile)
 		}
 	})
 }

@@ -1,12 +1,16 @@
-package main
+// Implement tests for the `ignore` library
+package ignore
 
 import (
-	"fmt"
-	"io/ioutil"
 	"os"
+
+	"io/ioutil"
 	"path/filepath"
-	"runtime"
+
+	"fmt"
 	"testing"
+
+	"runtime"
 
 	"github.com/stretchr/testify/assert"
 )

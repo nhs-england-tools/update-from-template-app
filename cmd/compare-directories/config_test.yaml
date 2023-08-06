@@ -1,11 +1,10 @@
 rules:
   copy: # These files cannot be ignored by user configuration
-    - file.copy
+    - path/to/file
   delete:
-    - file.delete
+    - legacy/file
   ignore:
-    - dir.ignore
-    - file.ignore
+    - custom/file
 
 version:
   file: scripts/config/.repository-template.yaml

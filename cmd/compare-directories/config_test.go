@@ -4,14 +4,17 @@ import (
 	"testing"
 )
 
-func TestReadConfig(t *testing.T) {
+func TestParseConfigFile(t *testing.T) {
 
-	t.Run("it should read config", func(t *testing.T) {
+	t.Run("it should parse config file", func(t *testing.T) {
 		// Arrange & Act
-		config, _ := readConfig(".config.yaml")
+		cf, err := parseConfigFile("config_test.yaml")
+		if err != nil {
+			t.Errorf("%s", err)
+		}
 		// Assert
-		if len(config.Update.Ignore) == 0 {
-			t.Errorf("%s", "Unable to read the config")
+		if len(cf.Content.Rules.Copy) == 0 || len(cf.Content.Rules.Delete) == 0 || len(cf.Content.Rules.Ignore) == 0 {
+			t.Errorf("%s", "Check the config file")
 		}
 	})
 }

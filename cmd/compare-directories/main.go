@@ -20,16 +20,23 @@ import (
 
 type FileInfo struct {
 	Path          string    `json:"path"`
-	Size          int64     `json:"size"`
 	Date          time.Time `json:"date"`
+	IsDirectory   bool      `json:"isDirectory"`
+	Size          int64     `json:"size"`
 	Hash          string    `json:"hash"`
 	IsText        bool      `json:"isText"`
 	NumberOfLines int       `json:"numberOfLines"`
 }
 
+type Exists struct {
+	Source      bool `json:"source"`
+	Destination bool `json:"destination"`
+}
+
 type TextFileComparisonInfo struct {
-	Exists bool `json:"exists"`
-	Match  int  `json:"match"`
+	Exists Exists `json:"exists"`
+	Match  int    `json:"match"`
+	Action string `json:"action"`
 }
 
 type Result struct {
@@ -40,46 +47,47 @@ type Result struct {
 
 func main() {
 
-	args, err := parseArguments()
+	// Parse the command-line arguments
+	args, err := parseCommandLineArguments()
 	if err != nil {
 		log.Fatalf("Error while parsing the command-line arguments: %s\n", err)
 	}
 
-	config, err := readConfig(*args.Cfg)
+	// Parse the config file
+	config, err := parseConfigFile(args.ConfigurationFile)
 	if err != nil {
-		log.Fatalf("Error while reading the config file: %s\n", err)
+		log.Fatalf("Error while parsing the config file: %s\n", err)
 	}
 
-	ignore := CompileIgnoreLines(config.Update.Ignore...)
-
-	source, destination, err := walk(args.Dir1, args.Dir2, ignore)
+	// Walk the directories
+	source, destination, err := walk(&args.SourceDirectory, &args.DestinationDirectory)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	result := compare(source, destination)
+
+	result := compare(source, destination, &config.Content.Rules)
 	printAsJson(result)
 }
 
-func walk(dir1, dir2 *string, ignore *GitIgnore) (map[string]FileInfo, map[string]FileInfo, error) {
+func walk(dir1, dir2 *string) (map[string]FileInfo, map[string]FileInfo, error) {
 
 	source := make(map[string]FileInfo)
 	destination := make(map[string]FileInfo)
 
+	// Walk the source directory
 	err := filepath.Walk(*dir1, func(path string, info os.FileInfo, err error) error {
 		if !info.IsDir() {
 			file, _ := filepath.Rel(*dir1, path)
-			if file == "." {
-				return nil
-			}
-			if ignore.MatchesPath(file) {
+			if file == "." || file == ".git" {
 				return nil
 			}
 			absPath, _ := filepath.Abs(path)
 			source[file] = FileInfo{
-				Path: absPath,
-				Size: info.Size(),
-				Date: info.ModTime(),
+				Path:        absPath,
+				Date:        info.ModTime(),
+				IsDirectory: false,
+				Size:        info.Size(),
 			}
 		}
 		return nil
@@ -88,20 +96,19 @@ func walk(dir1, dir2 *string, ignore *GitIgnore) (map[string]FileInfo, map[strin
 		return nil, nil, err
 	}
 
+	// Walk the destination directory
 	err = filepath.Walk(*dir2, func(path string, info os.FileInfo, err error) error {
 		if !info.IsDir() {
 			file, _ := filepath.Rel(*dir2, path)
-			if file == "." {
-				return nil
-			}
-			if ignore.MatchesPath(file) {
+			if file == "." || file == ".git" {
 				return nil
 			}
 			absPath, _ := filepath.Abs(path)
 			destination[file] = FileInfo{
-				Path: absPath,
-				Size: info.Size(),
-				Date: info.ModTime(),
+				Path:        absPath,
+				Date:        info.ModTime(),
+				IsDirectory: false,
+				Size:        info.Size(),
 			}
 		}
 		return nil
@@ -113,9 +120,10 @@ func walk(dir1, dir2 *string, ignore *GitIgnore) (map[string]FileInfo, map[strin
 	return source, destination, nil
 }
 
-func compare(source, destination map[string]FileInfo) Result {
+func compare(source, destination map[string]FileInfo, configRules *ConfigRules) Result {
 
 	comparison := make(map[string]TextFileComparisonInfo)
+	rules := parseConfigRules(configRules)
 
 	for file, info1 := range source {
 		source[file], _ = populateInfo(info1)
@@ -129,19 +137,48 @@ func compare(source, destination map[string]FileInfo) Result {
 			}
 			match := 100 - int(float64(levenshteinDistance)/float64(info1.Size)*100)
 			comparison[file] = TextFileComparisonInfo{
-				Exists: true,
+				Exists: Exists{
+					Source:      true,
+					Destination: true,
+				},
 				Match:  match,
+				Action: rules.action(file),
 			}
 		} else {
 			comparison[file] = TextFileComparisonInfo{
-				Exists: false,
+				Exists: Exists{
+					Source:      true,
+					Destination: false,
+				},
 				Match:  0,
+				Action: rules.action(file),
 			}
 		}
 	}
 	for file, info := range destination {
 		if _, exists := source[file]; !exists {
 			destination[file], _ = populateInfo(info)
+		}
+	}
+
+	// Add files to delete
+	for _, file := range configRules.Delete {
+		if _, exists := destination[file]; exists {
+			if _, exists := comparison[file]; !exists {
+				comparison[file] = TextFileComparisonInfo{
+					Exists: Exists{
+						Source:      false,
+						Destination: true,
+					},
+					Action: DELETE,
+				}
+			} else {
+				comparison[file] = TextFileComparisonInfo{
+					Exists: comparison[file].Exists,
+					Match:  comparison[file].Match,
+					Action: DELETE,
+				}
+			}
 		}
 	}
 
