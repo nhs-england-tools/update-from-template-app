@@ -11,6 +11,8 @@ rules:
     - scripts/cve-scanner.sh
     - scripts/sbom-generator.sh
   ignore:
+    - docs/adr/ADR-001_Use_git_hook_and_GitHub_action_to_check_the_editorconfig_compliance.md
+    - docs/adr/ADR-002_Scan_repository_for_hardcoded_secrets.md
     - .github/workflows
     - README.md
 
