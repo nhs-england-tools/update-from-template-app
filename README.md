@@ -1,10 +1,10 @@
-# Update from Template Action
+# Update from Template App
 
-The Update from Template Action is a powerful GitHub Action designed to propagate changes made in a template repository to all repositories created from it. This action is particularly beneficial for maintaining consistency across multiple repositories, which were initially set up using the [template repository](https://github.com/nhs-england-tools/repository-template) in the NHS England GitHub organisations. This ensures that improvements, fixes or any updates to the template repository are automatically synchronised across all linked repositories, enhancing maintainability, ensuring consistency and helping with governance.
+The Update from Template App is a powerful GitHub App and Action designed to propagate changes made in a template repository to all repositories created from it. This action is particularly beneficial for maintaining consistency across multiple repositories, which were initially set up using the [template repository](https://github.com/nhs-england-tools/repository-template) in the NHS England GitHub organisations. This ensures that improvements, fixes or any updates to the template repository are automatically synchronised across all linked repositories, enhancing maintainability, ensuring consistency and helping with governance.
 
 ## Table of Contents
 
-- [Update from Template Action](#update-from-template-action)
+- [Update from Template App](#update-from-template-app)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
@@ -56,7 +56,7 @@ After a successful installation, provide an informative example of how this proj
 
 The [C4 model](https://c4model.com/) is a simple and intuitive way to create software architecture diagrams that are clear, consistent, scalable and most importantly collaborative. This should result in documenting all the system interfaces, external dependencies and integration points.
 
-![Repository Template](./docs/diagrams/Update_from_Template-High_level_design.png)
+![Repository Template](./docs/diagrams/Update_from_Template_High_level_design.png)
 
 ### Configuration
 
