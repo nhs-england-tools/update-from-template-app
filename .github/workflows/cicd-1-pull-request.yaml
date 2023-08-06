@@ -5,7 +5,7 @@ name: CI/CD Pull Request
 on:
   push:
     branches:
-      - "**"
+      - "main"
   # pull_request:
   #   types: [opened, reopened]
 
