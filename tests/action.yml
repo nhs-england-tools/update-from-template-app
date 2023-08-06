@@ -52,6 +52,9 @@ runs:
           gh pr close $pr_number
         done
         # Delete branches
+        for branch in $(git branch | grep 'update-from-template-20'); do
+          git branch -D $branch
+        done
         for branch in $(git branch -r | grep 'origin/update-from-template-20'); do
           echo git push origin --delete ${branch#origin/}
         done
