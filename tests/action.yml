@@ -56,7 +56,7 @@ runs:
           git branch -D $branch
         done
         for branch in $(git branch -r | grep 'origin/update-from-template-20'); do
-          echo git push origin --delete ${branch#origin/}
+          git push origin --delete ${branch#origin/}
         done
         git checkout -b update-from-template-${{ inputs.build_timestamp }}
     - id: test-action
