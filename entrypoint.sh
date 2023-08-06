@@ -3,7 +3,7 @@
 /compare-directories \
   --source-dir $1 \
   --destination-dir $2 \
-  --config-file $3
+  --config-file $3 \
 > ./output.json
 cat ./output.json
 
