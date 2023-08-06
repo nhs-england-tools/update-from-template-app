@@ -77,6 +77,9 @@ func walk(dir1, dir2 *string) (map[string]FileInfo, map[string]FileInfo, error) 
 
 	// Walk the source directory
 	err := filepath.Walk(*dir1, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() && info.Name() == ".git" {
+			return filepath.SkipDir
+		}
 		if !info.IsDir() {
 			file, _ := filepath.Rel(*dir1, path)
 			if file == "." || file == ".git" {
@@ -98,6 +101,9 @@ func walk(dir1, dir2 *string) (map[string]FileInfo, map[string]FileInfo, error) 
 
 	// Walk the destination directory
 	err = filepath.Walk(*dir2, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() && info.Name() == ".git" {
+			return filepath.SkipDir
+		}
 		if !info.IsDir() {
 			file, _ := filepath.Rel(*dir2, path)
 			if file == "." || file == ".git" {
