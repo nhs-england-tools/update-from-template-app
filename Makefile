@@ -11,7 +11,8 @@ cmd-contract-test: # Run command-line tool contract test - optional: DATASET=[te
 	go run ./cmd/compare-directories \
 		--source-dir ./tests/data/$(or $(DATASET), small)/dir1 \
 		--destination-dir ./tests/data/$(or $(DATASET), small)/dir2 \
-		--config-file ./tests/data/.config.yaml \
+		--app-config-file ./tests/data/.config-app.yaml \
+		--template-config-file ./tests/data/.config-template.yaml \
 			> ./tests/contract-test/output.json
 	# Assert
 	go run ./tests/contract-test \
@@ -26,7 +27,8 @@ cmd-run: # Run command-line tool - optional: DATASET=[test data set name, defaul
 	./build/compare-directories \
 		--source-dir ./tests/data/$(or $(DATASET), small)/dir1 \
 		--destination-dir ./tests/data/$(or $(DATASET), small)/dir2 \
-		--config-file ./tests/data/.config.yaml \
+		--app-config-file ./tests/data/.config-app.yaml \
+		--template-config-file ./tests/data/.config-template.yaml \
 	| jq
 
 clean:: # Clean the project

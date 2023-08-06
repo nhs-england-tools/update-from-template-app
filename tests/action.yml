@@ -1,6 +1,9 @@
 name: "Update From Template Action Test"
 description: "This is a test of the Update From Template Action"
 inputs:
+  build_datetime_local:
+    description: "Build datetime (local), set by the CI/CD pipeline workflow"
+    required: true
   build_datetime:
     description: "Build datetime, set by the CI/CD pipeline workflow"
     required: true
@@ -48,25 +51,25 @@ runs:
         git config user.email "${{ github.actor }}@users.noreply.github.com"
         git config merge.conflictstyle diff3
         # Close PRs
-        pr_numbers=$(gh pr list --search "Update from template" --json number,title | jq '.[] | select(.title | startswith("Update from template 20")).number')
+        pr_numbers=$(gh pr list --search "Update from template" --json number,title | jq '.[] | select(.title | startswith("Update from template")).number')
         for pr_number in $pr_numbers; do
           gh pr close $pr_number
         done
         # Delete branches
-        for branch in $(git branch -r | grep 'origin/update-from-template-20'); do
+        for branch in $(git branch -r | grep 'origin/update-from-template'); do
           git push origin --delete ${branch#origin/}
         done
         git checkout -b update-from-template-${{ inputs.build_timestamp }}
     - id: test-action
       uses: ./
       with:
-        dir1: ./repository-template
-        dir2: ./repository-to-update
+        source-dir: ./repository-template
+        destination-dir: ./repository-to-update
     - shell: bash
       run: |
         cd ./repository-to-update
         git add -A
-        git commit -m "Update from template ${{ inputs.build_datetime }}"
+        git commit -m "Update from template ${{ inputs.build_datetime_local }}"
         git push -u origin update-from-template-${{ inputs.build_timestamp }}
     - shell: bash
       env:
@@ -74,5 +77,5 @@ runs:
       run: |
         cd ./repository-to-update
         gh pr create \
-          --title "Update from template ${{ inputs.build_datetime }}" \
-          --body "Update from template ${{ inputs.build_datetime }}"
+          --title "Update from template" \
+          --body "Update from template ${{ inputs.build_datetime_local }}"

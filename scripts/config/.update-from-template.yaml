@@ -1,5 +1,5 @@
 rules:
-  copy: # These files cannot be ignored by user configuration
+  update:
     - scripts/reports/cloc-repository.sh
     - scripts/reports/generate-sbom.sh
     - scripts/reports/perform-static-analysis.sh
@@ -20,9 +20,5 @@ rules:
     - docs/adr/ADR-002_Scan_repository_for_hardcoded_secrets.md
     - docs/diagrams/Repository_Template_GitHub_Generic.png
     - docs/diagrams/Repository_Template.drawio
-    - .github/workflows
     - README.md
     - VERSION
-
-version:
-  file: scripts/config/.repository-template.yaml

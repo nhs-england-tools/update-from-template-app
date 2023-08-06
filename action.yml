@@ -1,16 +1,15 @@
 name: "Update From Template Action"
 description: "Update repository from the template repository"
 inputs:
-  dir1:
-    description: "dir1"
+  source-dir:
+    description: "Source directory"
     required: true
-  dir2:
-    description: "dir2"
+  destination-dir:
+    description: "Destination directory"
     required: true
 runs:
   using: "docker"
   image: ./Dockerfile
   args:
-    - ${{ inputs.dir1 }}
-    - ${{ inputs.dir2 }}
-    - /.config.yaml
+    - ${{ inputs.source-dir }}
+    - ${{ inputs.destination-dir }}

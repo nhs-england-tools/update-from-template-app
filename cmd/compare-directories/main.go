@@ -50,13 +50,13 @@ func main() {
 	// Parse the command-line arguments
 	args, err := parseCommandLineArguments()
 	if err != nil {
-		log.Fatalf("Error while parsing the command-line arguments: %s\n", err)
+		log.Fatalf("Error while parsing command-line arguments: %s\n", err)
 	}
 
 	// Parse the config file
-	config, err := parseConfigFile(args.ConfigurationFile)
+	config, err := parseConfigFiles(args.AppConfigurationFile, args.TemplateConfigurationFile)
 	if err != nil {
-		log.Fatalf("Error while parsing the config file: %s\n", err)
+		log.Fatalf("Error while parsing config files: %s\n", err)
 	}
 
 	// Walk the directories
@@ -66,7 +66,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	result := compare(source, destination, &config.Content.Rules)
+	result := compare(source, destination, &config.Rules)
 	printAsJson(result)
 }
 

@@ -1,0 +1,8 @@
+rules:
+  update:
+    - file.update
+  delete:
+    - file.delete
+  ignore:
+    - dir.ignore
+    - file.ignore

@@ -1,0 +1,20 @@
+update-from-template:
+  ignore:
+    - .github/workflows
+    - tests/.gitkeep
+
+version:
+  build-datetime: 2023-08-06T17:31:34+0000
+  template:
+    url: https://github.com/nhs-england-tools/repository-template
+    branch: main
+    commit-hash: 0ffb5b82883f4a3b25c2df51eef4e67a18bae308
+    tags: []
+  bot:
+    url: https://github.com/nhs-england-tools/update-from-template-action
+    branch: main
+    commit-hash: 9cf49ce996b883184e0e354a9dddee4dcd6b9ee0
+    tags: []
+    id: 5778049408
+    number: 66
+    attempt: 1

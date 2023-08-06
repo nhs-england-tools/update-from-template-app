@@ -1,0 +1,19 @@
+update-from-template:
+  ignore:
+    - another-dir.ignore
+
+version:
+  build-datetime: 2023-01-01T00:00:00+0000
+  template:
+    url: https://github.com/org/repo
+    branch: main
+    commit-hash: 0000000000000000000000000000000000000000
+    tags: []
+  bot:
+    url: https://github.com/org/repo
+    branch: main
+    commit-hash: 0000000000000000000000000000000000000000
+    tags: []
+    id: 0
+    number: 0
+    attempt: 0

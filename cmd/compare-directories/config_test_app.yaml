@@ -1,0 +1,7 @@
+rules:
+  update:
+    - path/to/file
+  delete:
+    - legacy/file
+  ignore:
+    - custom/file

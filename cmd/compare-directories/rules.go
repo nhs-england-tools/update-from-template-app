@@ -5,24 +5,24 @@ import (
 )
 
 type Rules struct {
-	Copy   ignore.GitIgnore
+	Update ignore.GitIgnore
 	Delete ignore.GitIgnore
 	Ignore ignore.GitIgnore
 }
 
 const (
-	COPY   = "copy"
+	UPDATE = "update"
 	DELETE = "delete"
 	IGNORE = "ignore"
 )
 
 func parseConfigRules(configRules *ConfigRules) *Rules {
 
-	copy := ignore.CompileIgnoreLines(configRules.Copy...)
+	update := ignore.CompileIgnoreLines(configRules.Update...)
 	delete := ignore.CompileIgnoreLines(configRules.Delete...)
 	ignore := ignore.CompileIgnoreLines(configRules.Ignore...)
 	rules := &Rules{
-		Copy:   *copy,
+		Update: *update,
 		Delete: *delete,
 		Ignore: *ignore,
 	}
@@ -32,19 +32,19 @@ func parseConfigRules(configRules *ConfigRules) *Rules {
 
 func (rules *Rules) action(path string) string {
 
-	if rules.shouldCopy(path) {
-		return COPY
+	if rules.shouldUpdate(path) {
+		return UPDATE
 	} else if rules.shouldDelete(path) {
 		return DELETE
 	} else if rules.shouldIgnore(path) {
 		return IGNORE
 	} else {
-		return COPY
+		return UPDATE
 	}
 }
 
-func (rules *Rules) shouldCopy(path string) bool {
-	return rules.Copy.MatchesPath(path)
+func (rules *Rules) shouldUpdate(path string) bool {
+	return rules.Update.MatchesPath(path)
 }
 
 func (rules *Rules) shouldDelete(path string) bool {

@@ -8,36 +8,48 @@ import (
 )
 
 type ConfigRules struct {
-	Copy   []string `yaml:"copy"`
+	Update []string `yaml:"update"`
 	Delete []string `yaml:"delete"`
 	Ignore []string `yaml:"ignore"`
 }
 
 type Config struct {
-	File    string
-	Content struct {
-		Rules   ConfigRules `yaml:"rules"`
-		Version struct {
-			File string `yaml:"file"`
-		} `yaml:"version"`
-	}
+	Rules ConfigRules `yaml:"rules"`
 }
 
-func parseConfigFile(file string) (*Config, error) {
+type TemplateConfig struct {
+	Rules struct {
+		Ignore []string `yaml:"ignore"`
+	} `yaml:"update-from-template"`
+}
 
-	config := &Config{File: file}
+func parseConfigFiles(appFile, templateFile string) (*Config, error) {
 
-	// Read config file
-	content, err := ioutil.ReadFile(file)
+	config := &Config{}
+	// Read app config file
+	appContent, err := ioutil.ReadFile(appFile)
+	if err != nil {
+		return config, fmt.Errorf("%s", err)
+	}
+	// Parse app config file content
+	err = yaml.Unmarshal(appContent, &config)
 	if err != nil {
 		return config, fmt.Errorf("%s", err)
 	}
 
-	// Parse config file content
-	err = yaml.Unmarshal(content, &config.Content)
+	templateConfig := &TemplateConfig{}
+	// Read template config file
+	templateContent, err := ioutil.ReadFile(templateFile)
 	if err != nil {
 		return config, fmt.Errorf("%s", err)
 	}
+	// Parse template config file content
+	err = yaml.Unmarshal(templateContent, &templateConfig)
+	if err != nil {
+		return config, fmt.Errorf("%s", err)
+	}
+
+	config.Rules.Ignore = append(config.Rules.Ignore, templateConfig.Rules.Ignore...)
 
 	return config, nil
 }
