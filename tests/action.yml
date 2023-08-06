@@ -47,18 +47,15 @@ runs:
         git config user.name "${{ github.actor }}"
         git config user.email "${{ github.actor }}@users.noreply.github.com"
         git config merge.conflictstyle diff3
-        # # Close PRs
-        # pr_numbers=$(gh pr list --search "Update from template" --json number,title | jq '.[] | select(.title | startswith("Update from template 20")).number')
-        # for pr_number in $pr_numbers; do
-        #   gh pr close $pr_number
-        # done
-        # # Delete branches
-        # for branch in $(git branch | grep 'update-from-template-20'); do
-        #   git branch -D $branch
-        # done
-        # for branch in $(git branch -r | grep 'origin/update-from-template-20'); do
-        #   git push origin --delete ${branch#origin/}
-        # done
+        # Close PRs
+        pr_numbers=$(gh pr list --search "Update from template" --json number,title | jq '.[] | select(.title | startswith("Update from template 20")).number')
+        for pr_number in $pr_numbers; do
+          gh pr close $pr_number
+        done
+        # Delete branches
+        for branch in $(git branch -r | grep 'origin/update-from-template-20'); do
+          git push origin --delete ${branch#origin/}
+        done
         git checkout -b update-from-template-${{ inputs.build_timestamp }}
     - id: test-action
       uses: ./
