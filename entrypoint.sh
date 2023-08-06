@@ -13,16 +13,16 @@ to_copy=$(
   cat ./output.json \
     | jq -r '.comparison | to_entries[] | select(.value.action == "copy") | .key'
 )
-for file in $to_copy; do
+while IFS= read -r file; do
   dir=$(dirname "$file")
   mkdir -p $2/$dir
   cp $1/$file $2/$file
-done
+done <<< "$to_copy"
 
 to_delete=$(
   cat ./output.json \
     | jq -r '.comparison | to_entries[] | select(.value.action == "delete") | .key'
 )
-for file in $to_delete; do
+while IFS= read -r file; do
   rm -rf $2/$file
-done
+done <<< "$to_delete"
