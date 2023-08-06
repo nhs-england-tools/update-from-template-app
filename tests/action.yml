@@ -40,6 +40,8 @@ runs:
         token: ${{ steps.generate-token.outputs.token }}
 
     - shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
         cd ./repository-to-update
         git config user.name "${{ github.actor }}"
@@ -50,7 +52,7 @@ runs:
           gh pr close $pr_number
         done
         # Delete branches
-        for branch in $(git branch -r | grep 'origin/update-from-template-'); do
+        for branch in $(git branch -r | grep 'origin/update-from-template-20'); do
           echo git push origin --delete ${branch#origin/}
         done
         git checkout -b update-from-template-${{ inputs.build_timestamp }}
