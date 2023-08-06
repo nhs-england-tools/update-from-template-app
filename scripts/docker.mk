@@ -1,16 +1,19 @@
-DOCKER_IMAGE:=ghcr.io/nhs-england-tools/synchronise-template-action
+DOCKER_IMAGE := ghcr.io/nhs-england-tools/update-from-template-app
+DOCKER_TITLE := Update from Template App
+
+# TODO: Get `golang` and `alpine` versions from the ./tool-versions file
 
 docker-build: # Build Docker image
 	docker build \
 		--progress=plain \
 		--build-arg IMAGE=${DOCKER_IMAGE} \
-		--build-arg TITLE="Synchronise Template Action" \
-		--build-arg DESCRIPTION="Synchronise Template Action" \
+		--build-arg TITLE="${DOCKER_TITLE}" \
+		--build-arg DESCRIPTION="${DOCKER_TITLE}" \
 		--build-arg LICENCE=MIT \
 		--build-arg GIT_URL=$$(git config --get remote.origin.url) \
 		--build-arg GIT_BRANCH=$$(git rev-parse --abbrev-ref HEAD) \
 		--build-arg GIT_COMMIT_HASH=$$(git rev-parse --short HEAD) \
-		--build-arg BUILD_DATE=$$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+		--build-arg BUILD_DATE=$$(date -u +'%Y-%m-%dT%H:%M:%S%z') \
 		--build-arg BUILD_VERSION=$$(cat VERSION) \
 		--tag ${DOCKER_IMAGE}:$$(cat VERSION) \
 		--rm \
@@ -24,8 +27,8 @@ docker-test: # Test Docker image
 		| grep -q "Hello" && echo PASS || echo FAIL
 
 docker-run: # Run Docker image - mandatory: args=[command-line arguments]
-	docker run --rm \
-		--volume $$(PWD)/tests:/tests \
+	echo docker run --rm \
+		--volume ${PWD}/tests:/tests \
 		${DOCKER_IMAGE}:$$(cat VERSION) \
 		${args}
 

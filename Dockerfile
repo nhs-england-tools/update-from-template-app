@@ -1,6 +1,6 @@
 # === Builder ==================================================================
 
-FROM golang:1.20 as builder
+FROM golang:1.20.7 as builder
 WORKDIR ${GITHUB_WORKSPACE:-/repository}
 COPY . .
 RUN set -ex; \
