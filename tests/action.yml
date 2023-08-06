@@ -61,6 +61,10 @@ runs:
         GH_TOKEN: ${{ github.token }}
       run: |
         cd ./repository-to-update
+        pr_numbers=$(gh pr list --search "Update from template" --json number,title | jq '.[] | select(.title | startswith("Update from template 20")).number')
+        for pr_number in $pr_numbers; do
+          gh pr close $pr_number
+        done
         gh pr create \
           --title "Update from template ${{ inputs.build_datetime }}" \
           --body "Update from template ${{ inputs.build_datetime }}"
