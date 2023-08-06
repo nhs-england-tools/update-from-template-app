@@ -44,6 +44,15 @@ runs:
         cd ./repository-to-update
         git config user.name "${{ github.actor }}"
         git config user.email "${{ github.actor }}@users.noreply.github.com"
+        # Close PRs
+        pr_numbers=$(gh pr list --search "Update from template" --json number,title | jq '.[] | select(.title | startswith("Update from template 20")).number')
+        for pr_number in $pr_numbers; do
+          gh pr close $pr_number
+        done
+        # Delete branches
+        for branch in $(git branch -r | grep 'origin/update-from-template-'); do
+          echo git push origin --delete ${branch#origin/}
+        done
         git checkout -b update-from-template-${{ inputs.build_timestamp }}
     - id: test-action
       uses: ./
@@ -61,10 +70,6 @@ runs:
         GH_TOKEN: ${{ github.token }}
       run: |
         cd ./repository-to-update
-        pr_numbers=$(gh pr list --search "Update from template" --json number,title | jq '.[] | select(.title | startswith("Update from template 20")).number')
-        for pr_number in $pr_numbers; do
-          gh pr close $pr_number
-        done
         gh pr create \
           --title "Update from template ${{ inputs.build_datetime }}" \
           --body "Update from template ${{ inputs.build_datetime }}"
