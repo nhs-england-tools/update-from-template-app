@@ -7,6 +7,7 @@ rules:
   delete:
     - docs/adr/ADR-001_Use_git_hook_and_GitHub_action_to_check_the_editorconfig_compliance.md
     - docs/adr/ADR-002_Scan_repository_for_hardcoded_secrets.md
+    - docs/adr/ADR-XXX_Agree_CICD_pipeline_structure.md
     - docs/diagrams/Repository_Template_GitHub_Generic.png
     - docs/diagrams/Repository_Template.drawio
     - scripts/githooks/.pre-commit-config.yaml
@@ -18,6 +19,7 @@ rules:
   ignore:
     - docs/adr/ADR-001_Use_git_hook_and_GitHub_action_to_check_the_editorconfig_compliance.md
     - docs/adr/ADR-002_Scan_repository_for_hardcoded_secrets.md
+    - docs/adr/ADR-XXX_Agree_CICD_pipeline_structure.md
     - docs/diagrams/Repository_Template_GitHub_Generic.png
     - docs/diagrams/Repository_Template.drawio
     - README.md
