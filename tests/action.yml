@@ -44,7 +44,7 @@ runs:
 
     - shell: bash
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ github.token }}
       run: |
         cd ./repository-to-update
         git config user.name "${{ github.actor }}"
@@ -73,7 +73,7 @@ runs:
         git push -u origin update-from-template-${{ inputs.build_timestamp }}
     - shell: bash
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ github.token }}
       run: |
         cd ./repository-to-update
         gh pr create \
