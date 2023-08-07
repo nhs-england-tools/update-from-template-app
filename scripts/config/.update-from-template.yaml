@@ -13,6 +13,7 @@ rules:
     - scripts/githooks/.pre-commit-config.yaml
     - scripts/githooks/markdown-pre-commit.sh
     - scripts/githooks/secret-scan-pre-commit.sh
+    - scripts/test
     - scripts/cloc-repository.sh
     - scripts/cve-scanner.sh
     - scripts/sbom-generator.sh
@@ -22,5 +23,13 @@ rules:
     - docs/adr/ADR-XXX_Agree_CICD_pipeline_structure.md
     - docs/diagrams/Repository_Template_GitHub_Generic.png
     - docs/diagrams/Repository_Template.drawio
+    - project.code-workspace
     - README.md
+    - TODO.md
     - VERSION
+    # Changes to these files need to be managed by a script
+    - .gitignore
+    - .tool-versions
+    - Makefile
+scripts:
+  # TODO: Run scripts listed here on the destination repository
