@@ -13,7 +13,7 @@ rules:
     - scripts/githooks/.pre-commit-config.yaml
     - scripts/githooks/markdown-pre-commit.sh
     - scripts/githooks/secret-scan-pre-commit.sh
-    - scripts/test
+    - scripts/test/unit
     - scripts/cloc-repository.sh
     - scripts/cve-scanner.sh
     - scripts/sbom-generator.sh
