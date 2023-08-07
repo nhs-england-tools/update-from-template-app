@@ -9,7 +9,7 @@ inputs:
     required: true
 runs:
   using: "docker"
-  image: ./Dockerfile
+  image: ./Dockerfile.effective
   args:
     - ${{ inputs.source-dir }}
     - ${{ inputs.destination-dir }}

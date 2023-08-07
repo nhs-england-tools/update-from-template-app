@@ -2,9 +2,11 @@
 *cloc-report*.json
 *sbom-report*.json
 *vulnerabilities-report*.json
+**/Dockerfile.effective
 
 *.code-workspace
 !project.code-workspace
 
 coverage.html
 coverage.out
+!Dockerfile.effective
