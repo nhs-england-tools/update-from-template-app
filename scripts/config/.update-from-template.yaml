@@ -27,9 +27,9 @@ rules:
     - README.md
     - TODO.md
     - VERSION
-    # Changes to these files need to be managed by a script
-    - .gitignore
-    - .tool-versions
-    - Makefile
+    # # Changes to these files need to be managed by a script
+    # - .gitignore
+    # - .tool-versions
+    # - Makefile
 scripts:
   # TODO: Run scripts listed here on the destination repository
