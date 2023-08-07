@@ -1,17 +1,55 @@
+include ./scripts/docker.mk
 include ./scripts/init.mk
 include ./scripts/test.mk
 
-# This file contains hooks into the project configuration, test and build cycle
-# as automated steps to be executed on a workstation and in the CI/CD pipeline.
+cmd-unit-test: # Run command-line tool unit tests
+	go test -coverprofile=coverage.out  -v ./...
+	go tool cover -html=coverage.out -o coverage.html
+
+cmd-contract-test: # Run command-line tool contract test - optional: DATASET=[test data set name, defaults to `small`]
+	# Act
+	go run ./cmd/compare-directories \
+		--source-dir ./tests/data/$(or $(DATASET), small)/dir1 \
+		--destination-dir ./tests/data/$(or $(DATASET), small)/dir2 \
+		--app-config-file ./tests/data/.config-app.yaml \
+		--template-config-file ./tests/data/.config-template.yaml \
+			> ./tests/contract-test/output.json
+	# Assert
+	go run ./tests/contract-test \
+		-schema=./tests/contract-test/schema.json \
+		-output=./tests/contract-test/output.json
+
+cmd-build: # Build command-line tool
+	go build -o ./build/compare-directories ./cmd/compare-directories/
+	test -x ./build/compare-directories
+
+cmd-run: # Run command-line tool - optional: DATASET=[test data set name, defaults to `small`]
+	./build/compare-directories \
+		--source-dir ./tests/data/$(or $(DATASET), small)/dir1 \
+		--destination-dir ./tests/data/$(or $(DATASET), small)/dir2 \
+		--app-config-file ./tests/data/.config-app.yaml \
+		--template-config-file ./tests/data/.config-template.yaml \
+	| jq
+
+clean:: # Clean the project
+	rm -f \
+		./build/compare-directories \
+		./coverage.* \
+		./tests/contract-test/output.json
 
 config: # Configure development environment
-	# TODO: Use only `make` targets that are specific to this project, e.g. you may not need to install Node.js
 	make \
 		asdf-install \
-		githooks-install \
-		nodejs-install \
-		python-install \
-		terraform-install
+		githooks-install
+
+# ==============================================================================
 
 .SILENT: \
+	clean \
+	cmd-build \
+	cmd-contract-test \
+	cmd-integration-test \
+	cmd-performance-test \
+	cmd-run \
+	cmd-unit-test \
 	config
