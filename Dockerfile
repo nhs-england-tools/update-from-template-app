@@ -1,6 +1,6 @@
 # === Builder ==================================================================
 
-# `golang:latest` as it will be replaced automatically with a specific version
+# `golang:latest` will be replaced with a specific version stored in ./.tool-versions
 FROM golang:latest as builder
 WORKDIR ${GITHUB_WORKSPACE:-/github/workspace}
 COPY . .
@@ -12,7 +12,7 @@ RUN set -ex; \
 
 # === Runtime ==================================================================
 
-# `alpine:latest` as it will be replaced automatically with a specific version
+# `alpine:latest` will be replaced with a specific version stored in ./.tool-versions
 FROM alpine:latest
 RUN set -ex; \
     \

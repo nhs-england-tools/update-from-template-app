@@ -1,4 +1,4 @@
 golang 1.20.7
 pre-commit 3.3.3
 
-# alpine 3.18.2 # This is the base image for the Dockerfile
+# alpine 3.18.3 # This is the base image for the Dockerfile
