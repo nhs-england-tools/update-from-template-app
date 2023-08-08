@@ -1,8 +1,8 @@
 #!/bin/sh -l
 
 work_dir=${GITHUB_WORKSPACE:-/github/workspace}
-src_dir=${work_dir}/${SOURCE_DIR}
-dest_dir=${work_dir}/${DESTINATION_DIR}
+src_dir=${work_dir}/repository-template
+dest_dir=${work_dir}/repository-to-update
 
 # ==============================================================================
 
@@ -10,11 +10,11 @@ dest_dir=${work_dir}/${DESTINATION_DIR}
 git config --global user.name "${GIT_USER_NAME}"
 git config --global user.email "${GIT_USER_EMAIL}@users.noreply.github.com"
 git config --global pull.rebase false
-git config --global --add safe.directory ${dest_dir/\/.\//\/}
+git config --global --add safe.directory ${dest_dir}
 
 cd ${work_dir}
-git clone https://x-access-token:$GITHUB_APP_TOKEN@github.com/nhs-england-tools/repository-template.git
-git clone https://x-access-token:$GITHUB_APP_TOKEN@github.com/nhs-england-tools/update-from-template-app.git
+git clone https://x-access-token:${GITHUB_APP_TOKEN}@${REPOSITORY_TEMPLATE} ${src_dir}
+git clone https://x-access-token:${GITHUB_APP_TOKEN}@${REPOSITORY_TO_UPDATE} ${dest_dir}
 
 cd ${dest_dir}
 # Close legacy PRs

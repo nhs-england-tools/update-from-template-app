@@ -10,11 +10,11 @@ inputs:
   build_timestamp:
     description: "Build timestamp, set by the CI/CD pipeline workflow"
     required: true
-  source_dir:
-    description: "Source directory"
+  repository_template:
+    description: "Repository template"
     required: true
-  destination_dir:
-    description: "Destination directory"
+  repository_to_update:
+    description: "Repository to update"
     required: true
   git_user_name:
     description: "Committer git user.name"
@@ -35,8 +35,8 @@ runs:
     BUILD_DATETIME_LOCAL: ${{ inputs.build_datetime_local }}
     BUILD_DATETIME: ${{ inputs.build_datetime }}
     BUILD_TIMESTAMP: ${{ inputs.build_timestamp }}
-    SOURCE_DIR: ${{ inputs.source_dir }}
-    DESTINATION_DIR: ${{ inputs.destination_dir }}
+    REPOSITORY_TEMPLATE: ${{ inputs.repository_template }}
+    REPOSITORY_TO_UPDATE: ${{ inputs.repository_to_update }}
     GIT_USER_NAME: ${{ inputs.git_user_name }}
     GIT_USER_EMAIL: ${{ inputs.git_user_email }}
     GITHUB_TOKEN: ${{ inputs.github_token }}

@@ -48,8 +48,8 @@ runs:
         build_datetime_local: "${{ inputs.build_datetime_local }}"
         build_datetime: "${{ inputs.build_datetime }}"
         build_timestamp: "${{ inputs.build_timestamp }}"
-        source_dir: ./repository-template
-        destination_dir: ./repository-to-update
+        repository_template: github.com/nhs-england-tools/repository-template
+        repository_to_update: github.com/nhs-england-tools/update-from-template-app
         git_user_name: "${{ github.actor }}"
         git_user_email: "${{ github.actor }}@users.noreply.github.com"
         github_token: ${{ github.token }}
