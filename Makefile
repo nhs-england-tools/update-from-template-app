@@ -1,8 +1,13 @@
 include ./scripts/init.mk
 include ./scripts/test.mk
+include ./scripts/docker/docker.mk
 
-DOCKER_IMAGE := ghcr.io/nhs-england-tools/update-from-template-app
-DOCKER_TITLE := Update from Template App
+# ==============================================================================
+
+build: # Build the project
+	make \
+		cmd-build \
+		docker-build
 
 cmd-unit-test: # Run command-line tool unit tests
 	go test -coverprofile=coverage.out  -v ./...
@@ -33,13 +38,7 @@ cmd-run: # Run command-line tool - optional: DATASET=[test data set name, defaul
 		--template-config-file ./tests/data/.config-template.yaml \
 	| jq
 
-docker-build: # Build Docker image
-	source ./scripts/docker.sh
-	docker-build
-
 clean:: # Clean the project
-	source ./scripts/docker.sh
-	docker-clean
 	rm -f \
 		./build/compare-directories \
 		./coverage.* \
@@ -54,7 +53,7 @@ config: # Configure development environment
 
 .SILENT: \
 	clean \
-	docker-build \
+	build \
 	cmd-build \
 	cmd-contract-test \
 	cmd-integration-test \

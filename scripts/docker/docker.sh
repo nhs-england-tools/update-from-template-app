@@ -86,6 +86,7 @@ function _create-effective-dockerfile() {
   dir=${dir:-$PWD}
   cp ${dir}/Dockerfile ${dir}/Dockerfile.effective
   _replace-image-latest-by-specific-version
+  _append-metadata
 }
 
 # Replace image:latest by a specific version
@@ -104,6 +105,19 @@ function _replace-image-latest-by-specific-version() {
       sed -i "s/FROM ${name}:latest/FROM ${name}:${version}/g" ${dir}/Dockerfile.effective
     done
   fi
+}
+
+# Append metadata to the end of Dockerfile
+# Arguments:
+#   dir=[path to the Dockerfile to use; default is '.']
+function _append-metadata() {
+
+  dir=${dir:-$PWD}
+  cat \
+    $dir/Dockerfile.effective \
+    $(git rev-parse --show-toplevel)/scripts/docker/Dockerfile.metadata \
+  > $dir/Dockerfile.effective.tmp
+  mv $dir/Dockerfile.effective.tmp $dir/Dockerfile.effective
 }
 
 # Create effective version from the VERSION file

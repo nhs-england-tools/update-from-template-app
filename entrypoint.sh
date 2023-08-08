@@ -1,7 +1,8 @@
 #!/bin/sh -l
 
-src_dir=${GITHUB_WORKSPACE:-/github/workspace}/${SOURCE_DIR}
-dest_dir=${GITHUB_WORKSPACE:-/github/workspace}/${DESTINATION_DIR}
+work_dir=${GITHUB_WORKSPACE:-/github/workspace}
+src_dir=${work_dir}/${SOURCE_DIR}
+dest_dir=${work_dir}/${DESTINATION_DIR}
 
 # ==============================================================================
 
@@ -32,10 +33,10 @@ git checkout -b update-from-template-${BUILD_TIMESTAMP}
   --destination-dir ${dest_dir} \
   --app-config-file /.config.yaml \
   --template-config-file ${dest_dir}/scripts/config/.repository-template.yaml \
-> /tmp/compare-directories.json
+> ${work_dir}/update-from-template.json
 # Update files
 to_update=$(
-  cat /tmp/compare-directories.json \
+  cat ${work_dir}/update-from-template.json \
     | jq -r '.comparison | to_entries[] | select(.value.action == "update") | .key'
 )
 echo "$to_update" | while IFS= read -r file; do
@@ -45,7 +46,7 @@ echo "$to_update" | while IFS= read -r file; do
 done
 # Delete files
 to_delete=$(
-  cat /tmp/compare-directories.json \
+  cat ${work_dir}/update-from-template.json \
     | jq -r '.comparison | to_entries[] | select(.value.action == "delete") | .key'
 )
 echo "$to_delete" | while IFS= read -r file; do
@@ -54,6 +55,7 @@ done
 
 # ==============================================================================
 
+cd ${dest_dir}
 # Commit and push changes
 git add -A
 git commit -m "Update from template ${BUILD_DATETIME_LOCAL}"
