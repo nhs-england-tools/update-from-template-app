@@ -47,7 +47,7 @@ runs:
       with:
         build_datetime_local: "${{ inputs.build_datetime_local }}"
         build_datetime: "${{ inputs.build_datetime }}"
-        build_timestamp: "${{ inputs.build_datetime }}"
+        build_timestamp: "${{ inputs.build_timestamp }}"
         source_dir: ./repository-template
         destination_dir: ./repository-to-update
         git_user_name: "${{ github.actor }}"
