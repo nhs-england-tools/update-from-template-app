@@ -15,7 +15,6 @@ git config --global --add safe.directory ${dest_dir/\/.\//\/}
 cd ${work_dir}
 git clone https://x-access-token:$GITHUB_APP_TOKEN@github.com/nhs-england-tools/repository-template.git
 git clone https://x-access-token:$GITHUB_APP_TOKEN@github.com/nhs-england-tools/update-from-template-app.git
-exit 0
 
 cd ${dest_dir}
 # Close legacy PRs
