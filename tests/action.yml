@@ -52,4 +52,4 @@ runs:
         destination_dir: ./repository-to-update
         git_user_name: "${{ github.actor }}"
         git_user_email: "${{ github.actor }}@users.noreply.github.com"
-        github_token: ${{ github.token }}
+        github_token: ${{ steps.generate-token.outputs.token }}
