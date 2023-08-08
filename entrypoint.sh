@@ -1,36 +1,47 @@
-#!/bin/sh -l
+#!/bin/bash
 
 datetime=${BUILD_DATETIME:-$(date -u +'%Y-%m-%dT%H:%M:%S%z')}
 build_datetime_local=$(date --date=${datetime} +'%Y-%m-%dT%H:%M:%S%z')
 build_datetime=${datetime}
 build_timestamp=$(date --date=${datetime} -u +'%Y%m%d%H%M%S')
 
-work_dir=${GITHUB_WORKSPACE:-/github/workspace}
+git_user_name=${GIT_USER_NAME:-unknown}
+git_user_email=${GIT_USER_EMAIL:-unknown@users.noreply.github.com}
+
+work_dir=/github/workspace
 src_dir=${work_dir}/repository-template
 dest_dir=${work_dir}/repository-to-update
 
 # ==============================================================================
 
 # Global git settings
-git config --global user.name "${GIT_USER_NAME}"
-git config --global user.email "${GIT_USER_EMAIL}@users.noreply.github.com"
+git config --global user.name "${git_user_name}"
+git config --global user.email "${git_user_email}"
 git config --global pull.rebase false
 git config --global --add safe.directory ${dest_dir}
 
+test -d ${work_dir} || mkdir -p ${work_dir}
 cd ${work_dir}
-git clone https://x-access-token:${GITHUB_APP_TOKEN}@${REPOSITORY_TEMPLATE} ${src_dir}
-git clone https://x-access-token:${GITHUB_APP_TOKEN}@${REPOSITORY_TO_UPDATE} ${dest_dir}
+if [ -n "${GITHUB_APP_TOKEN}" ]; then
+  git clone https://x-access-token:${GITHUB_APP_TOKEN}@${REPOSITORY_TEMPLATE} ${src_dir}
+  git clone https://x-access-token:${GITHUB_APP_TOKEN}@${REPOSITORY_TO_UPDATE} ${dest_dir}
+else
+  git clone https://${REPOSITORY_TEMPLATE} ${src_dir}
+  git clone https://${REPOSITORY_TO_UPDATE} ${dest_dir}
+fi
 
 cd ${dest_dir}
-# Close legacy PRs
-pr_numbers=$(gh pr list --search "Update from template" --json number,title | jq '.[] | select(.title | startswith("Update from template")).number')
-for pr_number in $pr_numbers; do
-  gh pr close $pr_number
-done
-# Delete legacy branches
-for branch in $(git branch -r | grep 'origin/update-from-template'); do
-  git push origin --delete ${branch#origin/}
-done
+if [ -n "${GITHUB_APP_TOKEN}" ]; then
+  # Close legacy PRs
+  pr_numbers=$(gh pr list --search "Update from template" --json number,title | jq '.[] | select(.title | startswith("Update from template")).number')
+  for pr_number in $pr_numbers; do
+    gh pr close $pr_number
+  done
+  # Delete legacy branches
+  for branch in $(git branch -r | grep 'origin/update-from-template'); do
+    git push origin --delete ${branch#origin/}
+  done
+fi
 # Create new branch
 git checkout -b update-from-template-${build_timestamp}
 
@@ -65,11 +76,13 @@ done
 # ==============================================================================
 
 cd ${dest_dir}
-# Commit and push changes
+# Add and commit changes
 git add -A
 git commit -m "Update from template ${build_datetime_local}"
-git push -u origin update-from-template-${build_timestamp}
-# Create new PR
-gh pr create \
-  --title "Update from template" \
-  --body "Update from template ${build_datetime_local}"
+if [ -n "${GITHUB_APP_TOKEN}" ]; then
+  # Push and create new PR
+  git push -u origin update-from-template-${build_timestamp}
+  gh pr create \
+    --title "Update from template" \
+    --body "Update from template ${build_datetime_local}"
+fi

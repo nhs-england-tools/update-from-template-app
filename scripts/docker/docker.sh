@@ -41,20 +41,25 @@ function docker-build() {
 #   dir=[path to the Dockerfile to use; default is '.']
 function docker-test() {
 
-  docker run --rm ${DOCKER_IMAGE}:$(cat ${dir}/.version) 2>/dev/null \
-    | grep -q "${output}" && echo PASS || echo FAIL
+  dir=${dir:-$PWD}
+  docker run --rm \
+    ${DOCKER_IMAGE}:$(cat ${dir}/.version) 2>/dev/null \
+  | grep -q "${output}" && echo PASS || echo FAIL
 }
 
 # Run Docker image
 # Arguments:
-#   args=[command-line arguments to pass to the container]
+#   args=[arguments to pass to Docker to run the container; default is none/empty]
+#   cmd=[command to pass to the container for execution; default is none/empty]
 #   dir=[path to the Dockerfile to use; default is '.']
 function docker-run() {
 
+  dir=${dir:-$PWD}
   docker run --rm \
     --volume ${PWD}/tests:/tests \
+    ${args:-} \
     ${DOCKER_IMAGE}:$(cat ${dir}/.version) \
-    ${args}
+    ${cmd:-}
 }
 
 # Push Docker image
@@ -62,6 +67,7 @@ function docker-run() {
 #   dir=[path to the Dockerfile to use; default is '.']
 function docker-push() {
 
+  dir=${dir:-$PWD}
   docker push ${DOCKER_IMAGE}:$(cat ${dir}/.version)
   docker push ${DOCKER_IMAGE}:latest
 }
@@ -71,7 +77,8 @@ function docker-push() {
 #   dir=[path to the Dockerfile to use; default is '.']
 function docker-clean() {
 
-  find ${dir:-$PWD} -type f -name 'Dockerfile.effective' | xargs rm -f
+  dir=${dir:-$PWD}
+  find ${dir} -type f -name 'Dockerfile.effective' | xargs rm -f
   docker rmi ${DOCKER_IMAGE}:$(cat ${dir}/.version) > /dev/null 2>&1 ||:
   docker rmi ${DOCKER_IMAGE}:latest > /dev/null 2>&1 ||:
 }
