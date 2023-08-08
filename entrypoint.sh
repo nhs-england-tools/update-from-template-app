@@ -25,7 +25,7 @@ for branch in $(git branch -r | grep 'origin/update-from-template'); do
   git push origin --delete ${branch#origin/}
 done
 # Create new branch
-git checkout -b update-from-template-${BUILD_DATETIME}
+git checkout -b update-from-template-${BUILD_TIMESTAMP}
 
 # ==============================================================================
 
@@ -58,9 +58,9 @@ done
 
 # Commit and push changes
 git add -A
-git commit -m "Update from template $(date --date=${BUILD_DATETIME} +'%Y-%m-%dT%H:%M:%S%z')"
-git push -u origin update-from-template-$(date --date=${BUILD_DATETIME} -u +'%Y%m%d%H%M%S')
+git commit -m "Update from template ${BUILD_DATETIME_LOCAL}"
+git push -u origin update-from-template-${BUILD_TIMESTAMP}
 # Create new PR
 gh pr create \
   --title "Update from template" \
-  --body "Update from template $(date --date=${BUILD_DATETIME} +'%Y-%m-%dT%H:%M:%S%z')"
+  --body "Update from template ${BUILD_DATETIME_LOCAL}"

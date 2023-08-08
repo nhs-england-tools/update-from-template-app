@@ -1,14 +1,20 @@
 name: "Update From Template Action Test"
 description: "This is a test of the Update From Template Action"
 inputs:
+  build_datetime_local:
+    description: "Build datetime local, set by the CI/CD pipeline workflow"
+    required: true
+  build_datetime:
+    description: "Build datetime, set by the CI/CD pipeline workflow"
+    required: true
+  build_timestamp:
+    description: "Build timestamp, set by the CI/CD pipeline workflow"
+    required: true
   gh_app_id:
     description: "GitHub App ID"
     required: true
   gh_app_pk:
     description: "GitHub App private key"
-    required: true
-  build_datetime:
-    description: "Build datetime, set by the CI/CD pipeline workflow"
     required: true
 runs:
   using: "composite"
@@ -39,9 +45,11 @@ runs:
     - id: test-action
       uses: ./
       with:
-        github_token: ${{ github.token }}
+        build_datetime_local: "${{ inputs.build_datetime_local }}"
+        build_datetime: "${{ inputs.build_datetime }}"
+        build_timestamp: "${{ inputs.build_datetime }}"
         source_dir: ./repository-template
         destination_dir: ./repository-to-update
         git_user_name: "${{ github.actor }}"
         git_user_email: "${{ github.actor }}@users.noreply.github.com"
-        build_datetime: "${{ inputs.build_datetime }}"
+        github_token: ${{ github.token }}

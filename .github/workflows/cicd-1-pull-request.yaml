@@ -62,7 +62,9 @@ jobs:
     needs: [metadata] # ,commit-stage]
     uses: ./.github/workflows/stage-2-test.yaml
     with:
+      build_datetime_local: "${{ needs.metadata.outputs.build_datetime_local }}"
       build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
+      build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
       golang_version: "${{ needs.metadata.outputs.golang_version }}"
     secrets:
       UPDATE_FROM_TEMPLATE_GH_APP_ID: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_ID }}"
