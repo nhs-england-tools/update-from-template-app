@@ -1,5 +1,7 @@
 #!/bin/sh -l
 
+set -x
+
 src_dir=${GITHUB_WORKSPACE:-/github/workspace}/${SOURCE_DIR}
 dest_dir=${GITHUB_WORKSPACE:-/github/workspace}/${DESTINATION_DIR}
 
@@ -10,6 +12,7 @@ git config --global user.name "${GIT_USER_NAME}"
 git config --global user.email "${GIT_USER_EMAIL}@users.noreply.github.com"
 git config --global pull.rebase false
 git config --global --add safe.directory ${GITHUB_WORKSPACE:-/github/workspace}
+git config --global --add safe.directory /github/workspace/repository-to-update
 
 cd ${dest_dir}
 # Close legacy PRs
