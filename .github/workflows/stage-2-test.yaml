@@ -1,12 +1,8 @@
-name: Test Stage
+name: "Test stage"
 
 on:
   workflow_call:
     inputs:
-      build_datetime_local:
-        description: "Build datetime local, set by the CI/CD pipeline workflow"
-        required: true
-        type: string
       build_datetime:
         description: "Build datetime, set by the CI/CD pipeline workflow"
         required: true
@@ -15,50 +11,77 @@ on:
         description: "Build timestamp, set by the CI/CD pipeline workflow"
         required: true
         type: string
-      golang_version:
-        description: "Go version, set by the CI/CD pipeline workflow"
+      build_epoch:
+        description: "Build epoch, set by the CI/CD pipeline workflow"
         required: true
         type: string
-    secrets:
-      UPDATE_FROM_TEMPLATE_GH_APP_ID:
-        description: "GitHub App ID passed from the caller workflow"
+      nodejs_version:
+        description: "Node.js version, set by the CI/CD pipeline workflow"
         required: true
-      UPDATE_FROM_TEMPLATE_GH_APP_PK:
-        description: "GitHub App private key passed from the caller workflow"
+        type: string
+      python_version:
+        description: "Python version, set by the CI/CD pipeline workflow"
         required: true
+        type: string
+      terraform_version:
+        description: "Terraform version, set by the CI/CD pipeline workflow"
+        required: true
+        type: string
+      version:
+        description: "Version of the software, set by the CI/CD pipeline workflow"
+        required: true
+        type: string
+
 jobs:
-  # cmd-unit-test:
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 5
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-go@v4
-  #       with:
-  #         go-version: ${{ inputs.golang_version }}
-  #     - name: Run unit test
-  #       run: |
-  #         make cmd-unit-test
-  # cmd-contract-test:
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 5
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-go@v4
-  #       with:
-  #         go-version: ${{ inputs.golang_version }}
-  #     - name: Run contract test
-  #       run: |
-  #         make cmd-contract-test DATASET=large
-  action-test:
+  test-unit:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v3
-      - name: "Run action test"
-        uses: ./tests
+      - name: "Checkout code"
+        uses: actions/checkout@v3
+      - name: "Run unit test suite"
+        run: |
+          make test-unit
+      - name: "Save the result of fast test suite"
+        run: |
+          echo "Nothing to save"
+  test-lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v3
+      - name: "Run linting"
+        run: |
+          make test-lint
+      - name: "Save the linting result"
+        run: |
+          echo "Nothing to save"
+  test-coverage:
+    needs: [test-unit]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v3
+      - name: "Run test coverage check"
+        run: |
+          make test-coverage
+      - name: "Save the coverage check result"
+        run: |
+          echo "Nothing to save"
+  perform-static-analysis:
+    needs: [test-unit]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    timeout-minutes: 5
+    name: "Perform static analysis"
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v3
+      - name: "Perform static analysis"
+        uses: ./.github/actions/perform-static-analysis
         with:
-          build_datetime_local: ${{ inputs.build_datetime_local }}
-          build_datetime: ${{ inputs.build_datetime }}
-          build_timestamp: ${{ inputs.build_timestamp }}
-          gh_app_id: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_ID }}"
-          gh_app_pk: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_PK }}"
+          sonar_token: "${{ secrets.SONAR_TOKEN }}"
