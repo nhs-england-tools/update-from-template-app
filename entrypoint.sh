@@ -1,7 +1,5 @@
 #!/bin/sh -l
 
-set -x
-
 src_dir=${GITHUB_WORKSPACE:-/github/workspace}/${SOURCE_DIR}
 dest_dir=${GITHUB_WORKSPACE:-/github/workspace}/${DESTINATION_DIR}
 
@@ -12,7 +10,6 @@ git config --global user.name "${GIT_USER_NAME}"
 git config --global user.email "${GIT_USER_EMAIL}@users.noreply.github.com"
 git config --global pull.rebase false
 git config --global --add safe.directory ${dest_dir/\/.\//\/}
-#git config --global --add safe.directory /github/workspace/repository-to-update
 
 cd ${dest_dir}
 # Close legacy PRs
@@ -29,13 +26,14 @@ git checkout -b update-from-template-${BUILD_TIMESTAMP}
 
 # ==============================================================================
 
+# Produce a list of files to update and delete
 /compare-directories \
   --source-dir ${src_dir} \
   --destination-dir ${dest_dir} \
   --app-config-file /.config.yaml \
   --template-config-file ${dest_dir}/scripts/config/.repository-template.yaml \
 > /tmp/compare-directories.json
-
+# Update files
 to_update=$(
   cat /tmp/compare-directories.json \
     | jq -r '.comparison | to_entries[] | select(.value.action == "update") | .key'
@@ -45,7 +43,7 @@ echo "$to_update" | while IFS= read -r file; do
   mkdir -p ${dest_dir}/$dir
   cp ${src_dir}/$file ${dest_dir}/$file
 done
-
+# Delete files
 to_delete=$(
   cat /tmp/compare-directories.json \
     | jq -r '.comparison | to_entries[] | select(.value.action == "delete") | .key'
