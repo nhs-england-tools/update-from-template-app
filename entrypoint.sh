@@ -46,8 +46,8 @@ gh auth setup-git
 # ==============================================================================
 
 # Global git settings
-# git config --global user.name "${git_user_name}"
-# git config --global user.email "${git_user_email}"
+git config --global user.name "${git_user_name}"
+git config --global user.email "${git_user_email}"
 git config --global pull.rebase false
 git config --global --add safe.directory ${dest_dir}
 
