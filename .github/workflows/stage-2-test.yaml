@@ -3,16 +3,8 @@ name: Test Stage
 on:
   workflow_call:
     inputs:
-      build_datetime_local:
-        description: "Build datetime local, set by the CI/CD pipeline workflow"
-        required: true
-        type: string
       build_datetime:
         description: "Build datetime, set by the CI/CD pipeline workflow"
-        required: true
-        type: string
-      build_timestamp:
-        description: "Build timestamp, set by the CI/CD pipeline workflow"
         required: true
         type: string
       golang_version:
@@ -57,8 +49,6 @@ jobs:
       - name: "Run action test"
         uses: ./tests
         with:
-          build_datetime_local: ${{ inputs.build_datetime_local }}
           build_datetime: ${{ inputs.build_datetime }}
-          build_timestamp: ${{ inputs.build_timestamp }}
           gh_app_id: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_ID }}"
           gh_app_pk: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_PK }}"
