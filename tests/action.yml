@@ -1,20 +1,14 @@
 name: "Update From Template Action Test"
 description: "This is a test of the Update From Template Action"
 inputs:
-  build_datetime_local:
-    description: "Build datetime local, set by the CI/CD pipeline workflow"
-    required: true
-  build_datetime:
-    description: "Build datetime, set by the CI/CD pipeline workflow"
-    required: true
-  build_timestamp:
-    description: "Build timestamp, set by the CI/CD pipeline workflow"
-    required: true
   gh_app_id:
     description: "GitHub App ID"
     required: true
   gh_app_pk:
     description: "GitHub App private key"
+    required: true
+  build_datetime:
+    description: "Build datetime, set by the CI/CD pipeline workflow"
     required: true
 runs:
   using: "composite"
@@ -28,29 +22,13 @@ runs:
         app_id: ${{ inputs.gh_app_id }}
         private_key: ${{ inputs.gh_app_pk }}
 
-    # - name: Checkout the repository template
-    #   uses: actions/checkout@v3
-    #   with:
-    #     repository: nhs-england-tools/repository-template
-    #     path: repository-template
-
-    # # TODO: This is going to be a static list of repositories to update, e.g. stored as a flat file in this repository
-    # - name: Checkout the repository to be updated
-    #   uses: actions/checkout@v3
-    #   with:
-    #     path: repository-to-update
-    #     fetch-depth: 0
-    #     token: ${{ steps.generate-token.outputs.token }}
-
     - id: test-action
       uses: ./
       with:
-        build_datetime_local: "${{ inputs.build_datetime_local }}"
-        build_datetime: "${{ inputs.build_datetime }}"
-        build_timestamp: "${{ inputs.build_timestamp }}"
         repository_template: github.com/nhs-england-tools/repository-template
         repository_to_update: github.com/nhs-england-tools/update-from-template-app
         git_user_name: "${{ github.actor }}"
         git_user_email: "${{ github.actor }}@users.noreply.github.com"
-        #github_token: ${{ github.token }}
+        github_token: ${{ github.token }}
         github_app_token: ${{ steps.generate-token.outputs.token }}
+        build_datetime: "${{ inputs.build_datetime }}"

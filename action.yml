@@ -1,15 +1,6 @@
 name: "Update From Template Action"
 description: "Update repository from the template repository"
 inputs:
-  build_datetime_local:
-    description: "Build datetime local, set by the CI/CD pipeline workflow"
-    required: true
-  build_datetime:
-    description: "Build datetime, set by the CI/CD pipeline workflow"
-    required: true
-  build_timestamp:
-    description: "Build timestamp, set by the CI/CD pipeline workflow"
-    required: true
   repository_template:
     description: "Repository template"
     required: true
@@ -22,22 +13,23 @@ inputs:
   git_user_email:
     description: "Committer git user.email"
     required: true
-  # github_token:
-  #   description: "GitHub Token"
-  #   required: true
+  github_token:
+    description: "GitHub Token"
+    required: true
   github_app_token:
     description: "GitHub App token"
+    required: true
+  build_datetime:
+    description: "Build datetime, set by the CI/CD pipeline workflow"
     required: true
 runs:
   using: "docker"
   image: ./Dockerfile.effective
   env:
-    BUILD_DATETIME_LOCAL: ${{ inputs.build_datetime_local }}
-    BUILD_DATETIME: ${{ inputs.build_datetime }}
-    BUILD_TIMESTAMP: ${{ inputs.build_timestamp }}
     REPOSITORY_TEMPLATE: ${{ inputs.repository_template }}
     REPOSITORY_TO_UPDATE: ${{ inputs.repository_to_update }}
     GIT_USER_NAME: ${{ inputs.git_user_name }}
     GIT_USER_EMAIL: ${{ inputs.git_user_email }}
     GITHUB_TOKEN: ${{ github.token }}
     GITHUB_APP_TOKEN: ${{ inputs.github_app_token }}
+    BUILD_DATETIME: ${{ inputs.build_datetime }}

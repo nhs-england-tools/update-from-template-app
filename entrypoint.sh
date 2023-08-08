@@ -1,5 +1,10 @@
 #!/bin/sh -l
 
+datetime=${BUILD_DATETIME:-$(date -u +'%Y-%m-%dT%H:%M:%S%z')}
+build_datetime_local=$(date --date=${datetime} +'%Y-%m-%dT%H:%M:%S%z')
+build_datetime=${datetime}
+build_timestamp=$(date --date=${datetime} -u +'%Y%m%d%H%M%S')
+
 work_dir=${GITHUB_WORKSPACE:-/github/workspace}
 src_dir=${work_dir}/repository-template
 dest_dir=${work_dir}/repository-to-update
@@ -27,7 +32,7 @@ for branch in $(git branch -r | grep 'origin/update-from-template'); do
   git push origin --delete ${branch#origin/}
 done
 # Create new branch
-git checkout -b update-from-template-${BUILD_TIMESTAMP}
+git checkout -b update-from-template-${build_timestamp}
 
 # ==============================================================================
 
@@ -62,9 +67,9 @@ done
 cd ${dest_dir}
 # Commit and push changes
 git add -A
-git commit -m "Update from template ${BUILD_DATETIME_LOCAL}"
-git push -u origin update-from-template-${BUILD_TIMESTAMP}
+git commit -m "Update from template ${build_datetime_local}"
+git push -u origin update-from-template-${build_timestamp}
 # Create new PR
 gh pr create \
   --title "Update from template" \
-  --body "Update from template ${BUILD_DATETIME_LOCAL}"
+  --body "Update from template ${build_datetime_local}"

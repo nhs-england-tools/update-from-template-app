@@ -14,10 +14,11 @@ RUN set -ex; \
 
 # `alpine:latest` will be replaced with a specific version stored in ./.tool-versions
 FROM alpine:latest
+ENV TZ=Europe/London
 RUN set -ex; \
     \
     apk --no-cache add \
-        curl \
+        bash \
         git \
         git-lfs \
         github-cli \
