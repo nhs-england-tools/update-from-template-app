@@ -29,6 +29,6 @@ runs:
         repository_to_update: github.com/nhs-england-tools/update-from-template-app
         git_user_name: "${{ github.actor }}"
         git_user_email: "${{ github.actor }}@users.noreply.github.com"
-        github_token: ${{ github.token }}
+        github_token: ${{ inputs.github.token }}
         github_app_token: ${{ steps.generate-token.outputs.token }}
         build_datetime: "${{ inputs.build_datetime }}"
