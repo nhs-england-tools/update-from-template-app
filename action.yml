@@ -30,6 +30,6 @@ runs:
     REPOSITORY_TO_UPDATE: ${{ inputs.repository_to_update }}
     GIT_USER_NAME: ${{ inputs.git_user_name }}
     GIT_USER_EMAIL: ${{ inputs.git_user_email }}
-    GITHUB_TOKEN: ${{ github.token }}
+    GITHUB_TOKEN: ${{ github_token }}
     GITHUB_APP_TOKEN: ${{ inputs.github_app_token }}
     BUILD_DATETIME: ${{ inputs.build_datetime }}
