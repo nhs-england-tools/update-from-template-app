@@ -2,7 +2,7 @@
 
 # `golang:latest` as it will be replaced automatically with a specific version
 FROM golang:latest as builder
-WORKDIR ${GITHUB_WORKSPACE:-/repository}
+WORKDIR ${GITHUB_WORKSPACE:-/github/workspace}
 COPY . .
 RUN set -ex; \
     \
@@ -23,9 +23,9 @@ RUN set -ex; \
         git-lfs \
         github-cli \
         jq
-COPY --from=builder ${GITHUB_WORKSPACE:-/repository}/entrypoint.sh /
-COPY --from=builder ${GITHUB_WORKSPACE:-/repository}/build/compare-directories /
-COPY --from=builder ${GITHUB_WORKSPACE:-/repository}/scripts/config/.update-from-template.yaml /.config.yaml
+COPY --from=builder ${GITHUB_WORKSPACE:-/github/workspace}/entrypoint.sh /
+COPY --from=builder ${GITHUB_WORKSPACE:-/github/workspace}/build/compare-directories /
+COPY --from=builder ${GITHUB_WORKSPACE:-/github/workspace}/scripts/config/.update-from-template.yaml /.config.yaml
 ENTRYPOINT ["/entrypoint.sh"]
 
 # === Metadata =================================================================
