@@ -13,12 +13,18 @@ inputs:
   git_user_email:
     description: "Committer git user.email"
     required: true
-  github_token:
-    description: "GitHub Token"
+  gh_app_id:
+    description: "GitHub App ID"
     required: true
-  github_app_token:
-    description: "GitHub App token"
+  gh_app_pk:
+    description: "GitHub App private key"
     required: true
+  # github_token:
+  #   description: "GitHub Token"
+  #   required: true
+  # github_app_token:
+  #   description: "GitHub App token"
+  #   required: true
   build_datetime:
     description: "Build datetime, set by the CI/CD pipeline workflow"
     required: true
@@ -28,8 +34,10 @@ runs:
   env:
     REPOSITORY_TEMPLATE: ${{ inputs.repository_template }}
     REPOSITORY_TO_UPDATE: ${{ inputs.repository_to_update }}
-    GIT_USER_NAME: ${{ inputs.git_user_name }}
-    GIT_USER_EMAIL: ${{ inputs.git_user_email }}
-    GITHUB_TOKEN: ${{ inputs.github_token }}
-    GITHUB_APP_TOKEN: ${{ inputs.github_app_token }}
+    # GIT_USER_NAME: ${{ inputs.git_user_name }}
+    # GIT_USER_EMAIL: ${{ inputs.git_user_email }}
+    GH_APP_ID: ${{ inputs.gh_app_id }}
+    GH_APP_PK: ${{ inputs.gh_app_pk }}
+    # GITHUB_TOKEN: ${{ inputs.github_token }}
+    # GITHUB_APP_TOKEN: ${{ inputs.github_app_token }}
     BUILD_DATETIME: ${{ inputs.build_datetime }}

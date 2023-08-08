@@ -20,10 +20,12 @@ RUN set -ex; \
     apk --no-cache add \
         bash \
         coreutils \
+        curl \
         git \
         git-lfs \
         github-cli \
-        jq
+        jq \
+        openssl
 COPY --from=builder /github/workspace/build/compare-directories /
 COPY --from=builder /github/workspace/entrypoint.sh /
 COPY --from=builder /github/workspace/scripts/config/.update-from-template.yaml /.config.yaml

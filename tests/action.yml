@@ -14,13 +14,13 @@ runs:
   using: "composite"
   steps:
 
-    # TODO: Take ownership of this action and bring it to the NHS England Tools GH org
-    - name: "Generate token"
-      id: generate-token
-      uses: tibdex/github-app-token@v1
-      with:
-        app_id: ${{ inputs.gh_app_id }}
-        private_key: ${{ inputs.gh_app_pk }}
+    # # TODO: Take ownership of this action and bring it to the NHS England Tools GH org
+    # - name: "Generate token"
+    #   id: generate-token
+    #   uses: tibdex/github-app-token@v1
+    #   with:
+    #     app_id: ${{ inputs.gh_app_id }}
+    #     private_key: ${{ inputs.gh_app_pk }}
 
     - id: test-action
       uses: ./
@@ -29,6 +29,8 @@ runs:
         repository_to_update: github.com/nhs-england-tools/update-from-template-app
         git_user_name: "${{ github.actor }}"
         git_user_email: "${{ github.actor }}@users.noreply.github.com"
-        github_token: ${{ github.token }}
-        github_app_token: ${{ steps.generate-token.outputs.token }}
+        gh_app_id: ${{ inputs.gh_app_id }}
+        gh_app_pk: ${{ inputs.gh_app_pk }}
+        # github_token: ${{ github.token }}
+        # github_app_token: ${{ steps.generate-token.outputs.token }}
         build_datetime: "${{ inputs.build_datetime }}"

@@ -56,7 +56,6 @@ function docker-run() {
 
   dir=${dir:-$PWD}
   docker run --rm \
-    --volume ${PWD}/tests:/tests \
     ${args:-} \
     ${DOCKER_IMAGE}:$(cat ${dir}/.version) \
     ${cmd:-}

@@ -1,3 +1,4 @@
+.docker
 .scannerwork
 *cloc-report*.json
 *sbom-report*.json

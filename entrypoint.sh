@@ -14,24 +14,55 @@ dest_dir=${work_dir}/repository-to-update
 
 # ==============================================================================
 
+GH_APP_PK_PATH=/github/workspace/gh_app_pk.pem
+if ! [ -f $GH_APP_PK_PATH ]; then
+  echo "$GH_APP_PK" > $GH_APP_PK_PATH
+fi
+
+function generate-jwt() {
+  header=$(echo -n '{"alg":"RS256","typ":"JWT"}' | base64 | tr -d '=' | tr -d '\n=' | tr -- '+/' '-_')
+  payload=$(echo -n '{"iat":'$(date +%s)',"exp":'$(($(date +%s)+600))',"iss":"'$GH_APP_ID'"}' | base64 | tr -d '\n=' | tr -- '+/' '-_')
+  signature=$(echo -n "$header.$payload" | openssl dgst -binary -sha256 -sign $GH_APP_PK_PATH | openssl base64 | tr -d '\n=' | tr -- '+/' '-_')
+  echo "$header.$payload.$signature"
+}
+JWT=$(generate-jwt)
+
+INSTALLATIONS_RESPONSE=$(curl -X GET \
+  -H "Authorization: Bearer $JWT" \
+  -H "Accept: application/vnd.github.v3+json" \
+  https://api.github.com/app/installations)
+INSTALLATION_ID=$(echo $INSTALLATIONS_RESPONSE | jq '.[0].id')
+TOKEN_RESPONSE=$(curl -X POST \
+  -H "Authorization: Bearer $JWT" \
+  -H "Accept: application/vnd.github.v3+json" \
+  https://api.github.com/app/installations/$INSTALLATION_ID/access_tokens)
+GITHUB_TOKEN=$(echo $TOKEN_RESPONSE | jq .token -r)
+
+echo $GITHUB_TOKEN
+gh auth login --with-token <<< $GITHUB_TOKEN
+gh auth status
+gh auth setup-git
+
+# ==============================================================================
+
 # Global git settings
-git config --global user.name "${git_user_name}"
-git config --global user.email "${git_user_email}"
+# git config --global user.name "${git_user_name}"
+# git config --global user.email "${git_user_email}"
 git config --global pull.rebase false
 git config --global --add safe.directory ${dest_dir}
 
 test -d ${work_dir} || mkdir -p ${work_dir}
 cd ${work_dir}
-if [ -n "${GITHUB_APP_TOKEN}" ]; then
-  git clone https://x-access-token:${GITHUB_APP_TOKEN}@${REPOSITORY_TEMPLATE} ${src_dir}
-  git clone https://x-access-token:${GITHUB_APP_TOKEN}@${REPOSITORY_TO_UPDATE} ${dest_dir}
+if [ -n "${GITHUB_TOKEN}" ]; then
+  git clone https://x-access-token:${GITHUB_TOKEN}@${REPOSITORY_TEMPLATE} ${src_dir}
+  git clone https://x-access-token:${GITHUB_TOKEN}@${REPOSITORY_TO_UPDATE} ${dest_dir}
 else
   git clone https://${REPOSITORY_TEMPLATE} ${src_dir}
   git clone https://${REPOSITORY_TO_UPDATE} ${dest_dir}
 fi
 
 cd ${dest_dir}
-if [ -n "${GITHUB_APP_TOKEN}" ]; then
+if [ -n "${GITHUB_TOKEN}" ]; then
   # Close legacy PRs
   pr_numbers=$(gh pr list --search "Update from template" --json number,title | jq '.[] | select(.title | startswith("Update from template")).number')
   for pr_number in $pr_numbers; do
@@ -79,7 +110,7 @@ cd ${dest_dir}
 # Add and commit changes
 git add -A
 git commit -m "Update from template ${build_datetime_local}"
-if [ -n "${GITHUB_APP_TOKEN}" ]; then
+if [ -n "${GITHUB_TOKEN}" ]; then
   # Push and create new PR
   git push -u origin update-from-template-${build_timestamp}
   gh pr create \
