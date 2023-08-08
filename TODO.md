@@ -11,3 +11,4 @@
   - Implement metrics
   - Upload report
 - Simplify and optmise for speed `./cmd/compare-directories` implementation
+- In the action implementation reference image that is already built
