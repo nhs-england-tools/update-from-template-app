@@ -1,6 +1,5 @@
 update-from-template:
   ignore:
-    - .github/workflows
     - tests/.gitkeep
 
 version:
