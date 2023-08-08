@@ -13,7 +13,7 @@ RUN set -ex; \
 # === Runtime ==================================================================
 
 # `alpine:latest` as it will be replaced automatically with a specific version
-FROM alpine:3.18.2
+FROM alpine:3.18.3
 RUN set -ex; \
     \
     apk --no-cache add \
