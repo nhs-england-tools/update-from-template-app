@@ -23,6 +23,9 @@ inputs:
     description: "Committer git user.email"
     required: true
   github_token:
+    description: "GitHub Token"
+    required: true
+  github_app_token:
     description: "GitHub App token"
     required: true
 runs:
@@ -37,3 +40,4 @@ runs:
     GIT_USER_NAME: ${{ inputs.git_user_name }}
     GIT_USER_EMAIL: ${{ inputs.git_user_email }}
     GITHUB_TOKEN: ${{ inputs.github_token }}
+    GITHUB_APP_TOKEN: ${{ inputs.github_app_token }}

@@ -20,27 +20,27 @@ runs:
   using: "composite"
   steps:
 
-    # # TODO: Take ownership of this action and bring it to the NHS England Tools GH org
-    # - name: "Generate token"
-    #   id: generate-token
-    #   uses: tibdex/github-app-token@v1
+    # TODO: Take ownership of this action and bring it to the NHS England Tools GH org
+    - name: "Generate token"
+      id: generate-token
+      uses: tibdex/github-app-token@v1
+      with:
+        app_id: ${{ inputs.gh_app_id }}
+        private_key: ${{ inputs.gh_app_pk }}
+
+    # - name: Checkout the repository template
+    #   uses: actions/checkout@v3
     #   with:
-    #     app_id: ${{ inputs.gh_app_id }}
-    #     private_key: ${{ inputs.gh_app_pk }}
+    #     repository: nhs-england-tools/repository-template
+    #     path: repository-template
 
-    - name: Checkout the repository template
-      uses: actions/checkout@v3
-      with:
-        repository: nhs-england-tools/repository-template
-        path: repository-template
-
-    # TODO: This is going to be a static list of repositories to update, e.g. stored as a flat file in this repository
-    - name: Checkout the repository to be updated
-      uses: actions/checkout@v3
-      with:
-        path: repository-to-update
-        fetch-depth: 0
-        token: ${{ github.token }}
+    # # TODO: This is going to be a static list of repositories to update, e.g. stored as a flat file in this repository
+    # - name: Checkout the repository to be updated
+    #   uses: actions/checkout@v3
+    #   with:
+    #     path: repository-to-update
+    #     fetch-depth: 0
+    #     token: ${{ steps.generate-token.outputs.token }}
 
     - id: test-action
       uses: ./
@@ -53,3 +53,4 @@ runs:
         git_user_name: "${{ github.actor }}"
         git_user_email: "${{ github.actor }}@users.noreply.github.com"
         github_token: ${{ github.token }}
+        github_app_token: ${{ steps.generate-token.outputs.token }}
