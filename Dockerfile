@@ -14,6 +14,7 @@ RUN set -ex; \
 
 # `alpine:latest` as it will be replaced automatically with a specific version
 FROM alpine:latest
+ENV TZ="Europe/London"
 RUN set -ex; \
     \
     apk --no-cache add \
