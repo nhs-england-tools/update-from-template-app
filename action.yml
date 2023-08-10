@@ -16,10 +16,10 @@ inputs:
   git_user_email:
     description: "Committer git user.email"
     required: true
-  gh_app_id:
+  github_app_id:
     description: "GitHub App ID"
     required: true
-  gh_app_pk:
+  github_app_private_key:
     description: "GitHub App private key"
     required: true
 runs:
@@ -31,5 +31,5 @@ runs:
     REPOSITORY_TO_UPDATE: ${{ inputs.repository_to_update }}
     GIT_USER_NAME: ${{ inputs.git_user_name }}
     GIT_USER_EMAIL: ${{ inputs.git_user_email }}
-    GH_APP_ID: ${{ inputs.gh_app_id }}
-    GH_APP_PK: ${{ inputs.gh_app_pk }}
+    GITHUB_APP_ID: ${{ inputs.github_app_id }}
+    GITHUB_APP_PK: ${{ inputs.github_app_private_key }}

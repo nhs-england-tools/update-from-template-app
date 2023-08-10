@@ -17,9 +17,9 @@ list_of_files_to_update_json=${work_dir}/update-from-template.json
 git_user_name=${GIT_USER_NAME:-"unknown"}
 git_user_email=${GIT_USER_EMAIL:-"unknown@users.noreply.github.com"}
 
-GH_APP_PK_PATH=$work_dir/gh_app_pk.pem
-if ! [ -f $GH_APP_PK_PATH ]; then
-  echo "$GH_APP_PK" > $GH_APP_PK_PATH
+GITHUB_APP_PK_PATH=$work_dir/gh_app_pk.pem
+if ! [ -f $GITHUB_APP_PK_PATH ]; then
+  echo "$GITHUB_APP_PK" > $GITHUB_APP_PK_PATH
 fi
 
 
@@ -43,8 +43,8 @@ function create-github-token() {
   is-arg-true "${DRY_RUN:-false}" && return
 
   header=$(echo -n '{"alg":"RS256","typ":"JWT"}' | base64 | tr -d '=' | tr -d '\n=' | tr -- '+/' '-_')
-  payload=$(echo -n '{"iat":'$(date +%s)',"exp":'$(($(date +%s)+600))',"iss":"'$GH_APP_ID'"}' | base64 | tr -d '\n=' | tr -- '+/' '-_')
-  signature=$(echo -n "$header.$payload" | openssl dgst -binary -sha256 -sign $GH_APP_PK_PATH | openssl base64 | tr -d '\n=' | tr -- '+/' '-_')
+  payload=$(echo -n '{"iat":'$(date +%s)',"exp":'$(($(date +%s)+600))',"iss":"'$GITHUB_APP_ID'"}' | base64 | tr -d '\n=' | tr -- '+/' '-_')
+  signature=$(echo -n "$header.$payload" | openssl dgst -binary -sha256 -sign $GITHUB_APP_PK_PATH | openssl base64 | tr -d '\n=' | tr -- '+/' '-_')
   jwt="$header.$payload.$signature"
 
   installations_response=$(curl -X GET \

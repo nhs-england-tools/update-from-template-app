@@ -50,5 +50,5 @@ jobs:
         uses: ./tests
         with:
           build_datetime: ${{ inputs.build_datetime }}
-          gh_app_id: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_ID }}"
-          gh_app_pk: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_PK }}"
+          github_app_id: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_ID }}"
+          github_app_private_key: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_PK }}"
