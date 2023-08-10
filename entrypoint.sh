@@ -69,7 +69,7 @@ function configure-git-access() {
   git config --global pull.rebase false
   git config --global --add safe.directory $dest_dir
 
-  [ -z "$github_token"] && return
+  [ -z "$github_token" ] && return
   echo "$github_token" | gh auth login --with-token
   gh auth status
   gh auth setup-git
@@ -108,7 +108,7 @@ function fetch-repositories-content() {
 
 function prune-legacy-updates() {
 
-  [ -z "$github_token"] && return
+  [ -z "$github_token" ] && return
 
   cd ${dest_dir}
   # Close legacy PRs
@@ -168,7 +168,7 @@ function push-and-create-pull-request() {
   git add -A
   git commit -m "Update from template ${build_datetime_local}"
 
-  [ -z "$github_token"] && return
+  [ -z "$github_token" ] && return
 
   # Push and create new PR
   git push -u origin update-from-template-${build_timestamp}
