@@ -22,8 +22,6 @@ if ! [ -f $GITHUB_APP_PK_PATH ]; then
   echo "$GITHUB_APP_PK" > $GITHUB_APP_PK_PATH
 fi
 
-
-
 # ==============================================================================
 
 function main() {
@@ -66,7 +64,6 @@ function configure-git-access() {
 
   git config --global user.name "$git_user_name"
   git config --global user.email "$git_user_email"
-  git config --global pull.rebase false
   git config --global --add safe.directory $dest_dir
 
   [ -z "$github_token" ] && return
