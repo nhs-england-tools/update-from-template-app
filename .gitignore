@@ -1,12 +1,7 @@
-.docker
 .scannerwork
 *cloc-report*.json
 *sbom-report*.json
 *vulnerabilities-report*.json
-.version
 
 *.code-workspace
 !project.code-workspace
-
-coverage.html
-coverage.out
