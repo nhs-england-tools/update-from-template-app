@@ -10,3 +10,11 @@
   - Upload report
 - Simplify and optmise for speed `./cmd/compare-directories` implementation
 - In the action implementation reference image that is already built
+
+## Releasing Changes from the Repository Template into target repositories
+
+1. The changes from the repository template modify the target repository with a fast-forwardable merge commit to the main branch. We want to enable a linear history in the target repository.
+2. We do not want to have the full history from the repository template.  We want squashed, atomic commits to a schedule that does not overload the team responsible for the target repository.
+3. It is *not* necessary (although it would be preferable) to retain a linear history in the repository template.
+4. We need to enable teams to make changes to the applied changeset.
+5. If the commit as applied to the target repository breaks their build that is a bug in the commit generation process for us to fix.
