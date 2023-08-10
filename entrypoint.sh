@@ -22,6 +22,8 @@ if ! [ -f $GH_APP_PK_PATH ]; then
   echo "$GH_APP_PK" > $GH_APP_PK_PATH
 fi
 
+
+
 # ==============================================================================
 
 function main() {
@@ -38,7 +40,7 @@ function main() {
 
 function create-github-token() {
 
-  is-arg-true "$DRY_RUN" && return
+  is-arg-true "${DRY_RUN:-false}" && return
 
   header=$(echo -n '{"alg":"RS256","typ":"JWT"}' | base64 | tr -d '=' | tr -d '\n=' | tr -- '+/' '-_')
   payload=$(echo -n '{"iat":'$(date +%s)',"exp":'$(($(date +%s)+600))',"iss":"'$GH_APP_ID'"}' | base64 | tr -d '\n=' | tr -- '+/' '-_')
