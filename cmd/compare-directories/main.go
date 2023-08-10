@@ -141,7 +141,7 @@ func compare(source, destination map[string]FileInfo, configRules *ConfigRules) 
 				fmt.Printf("Failed to compare file %s: %s\n", file, err)
 				continue
 			}
-			match := 100 - int(float64(levenshteinDistance)/float64(info1.Size)*100)
+			match := 100 - int(float64(levenshteinDistance)/float64(info1.Size+info2.Size)*100)
 			comparison[file] = TextFileComparisonInfo{
 				Exists: Exists{
 					Source:      true,

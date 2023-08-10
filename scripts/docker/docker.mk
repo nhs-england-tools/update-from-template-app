@@ -13,6 +13,7 @@ docker-test: # Test Docker image
 		-e REPOSITORY_TEMPLATE=github.com/nhs-england-tools/repository-template \
 		-e REPOSITORY_TO_UPDATE=github.com/nhs-england-tools/update-from-template-app \
 		-e GH_APP_ID \
+		-e DRY_RUN \
 		-v ${PWD}/.docker:/github/workspace \
 	" \
 	docker-run

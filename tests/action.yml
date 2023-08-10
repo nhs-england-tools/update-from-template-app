@@ -1,36 +1,26 @@
 name: "Update From Template Action Test"
 description: "This is a test of the Update From Template Action"
 inputs:
+  build_datetime:
+    description: "Build datetime, set by the CI/CD pipeline workflow"
+    required: true
   gh_app_id:
     description: "GitHub App ID"
     required: true
   gh_app_pk:
     description: "GitHub App private key"
     required: true
-  build_datetime:
-    description: "Build datetime, set by the CI/CD pipeline workflow"
-    required: true
 runs:
   using: "composite"
   steps:
 
-    # # TODO: Take ownership of this action and bring it to the NHS England Tools GH org
-    # - name: "Generate token"
-    #   id: generate-token
-    #   uses: tibdex/github-app-token@v1
-    #   with:
-    #     app_id: ${{ inputs.gh_app_id }}
-    #     private_key: ${{ inputs.gh_app_pk }}
-
     - id: test-action
       uses: ./
       with:
+        build_datetime: "${{ inputs.build_datetime }}"
         repository_template: github.com/nhs-england-tools/repository-template
         repository_to_update: github.com/nhs-england-tools/update-from-template-app
-        git_user_name: "${{ github.actor }}"
-        git_user_email: "${{ github.actor }}@users.noreply.github.com"
+        git_user_name: "Update from Template App"
+        git_user_email: "england.tools-update-from-template-app@nhs.net" # "${{ github.actor }}@users.noreply.github.com"
         gh_app_id: ${{ inputs.gh_app_id }}
         gh_app_pk: ${{ inputs.gh_app_pk }}
-        # github_token: ${{ github.token }}
-        # github_app_token: ${{ steps.generate-token.outputs.token }}
-        build_datetime: "${{ inputs.build_datetime }}"

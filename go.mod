@@ -1,6 +1,6 @@
 module github.com/nhs-england-tools/update-from-template-action
 
-go 1.20
+go 1.21
 
 require (
 	github.com/agnivade/levenshtein v1.1.1
