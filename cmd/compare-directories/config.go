@@ -40,13 +40,12 @@ func parseConfigFiles(appFile, templateFile string) (*Config, error) {
 	templateConfig := &TemplateConfig{}
 	// Read template config file
 	templateContent, err := ioutil.ReadFile(templateFile)
-	if err != nil {
-		return config, fmt.Errorf("%s", err)
-	}
-	// Parse template config file content
-	err = yaml.Unmarshal(templateContent, &templateConfig)
-	if err != nil {
-		return config, fmt.Errorf("%s", err)
+	if err == nil {
+		// Parse template config file content
+		err = yaml.Unmarshal(templateContent, &templateConfig)
+		if err != nil {
+			return config, fmt.Errorf("%s", err)
+		}
 	}
 
 	config.Rules.Ignore = append(config.Rules.Ignore, templateConfig.Rules.Ignore...)

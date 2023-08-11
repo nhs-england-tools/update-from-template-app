@@ -10,11 +10,17 @@ docker-build: # Build Docker image
 docker-test: # Test Docker image
 	source ./scripts/docker/docker.sh
 	args=" \
-		-e REPOSITORY_TEMPLATE=github.com/nhs-england-tools/repository-template \
-		-e REPOSITORY_TO_UPDATE=github.com/nhs-england-tools/update-from-template-app \
+		-e REPOSITORY_TEMPLATE \
+		-e REPOSITORY_TO_UPDATE \
+		-e GIT_USER_NAME \
+		-e GIT_USER_EMAIL \
 		-e GITHUB_APP_ID \
 		-e GITHUB_APP_PK \
+		-e GITHUB_APP_SK_ID \
+		-e GITHUB_APP_SK_CONTENT \
+		-e GITHUB_APP_SK_PASSPHRASE \
 		-e DRY_RUN \
+		-e VERBOSE \
 		-v ${PWD}/.docker:/github/workspace \
 	" \
 	docker-run

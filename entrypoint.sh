@@ -17,10 +17,15 @@ list_of_files_to_update_json=${work_dir}/update-from-template.json
 git_user_name=${GIT_USER_NAME:-"unknown"}
 git_user_email=${GIT_USER_EMAIL:-"unknown@users.noreply.github.com"}
 
-GITHUB_APP_PK_PATH=$work_dir/gh_app_pk.pem
-if ! [ -f $GITHUB_APP_PK_PATH ]; then
-  echo "$GITHUB_APP_PK" > $GITHUB_APP_PK_PATH
+GITHUB_APP_PK_FILE=$work_dir/gh_app_pk.pem
+if ! [ -f $GITHUB_APP_PK_FILE ]; then
+  echo "$GITHUB_APP_PK" > $GITHUB_APP_PK_FILE
 fi
+GITHUB_APP_SK_CONTENT_FILE=$work_dir/gh_app_sk.pem
+if ! [ -f $GITHUB_APP_SK_CONTENT_FILE ]; then
+  echo "$GITHUB_APP_SK_CONTENT" > $GITHUB_APP_SK_CONTENT_FILE
+fi
+org=$(echo "${REPOSITORY_TO_UPDATE}" | cut -d'/' -f2)
 
 # ==============================================================================
 
@@ -42,14 +47,14 @@ function create-github-token() {
 
   header=$(echo -n '{"alg":"RS256","typ":"JWT"}' | base64 | tr -d '=' | tr -d '\n=' | tr -- '+/' '-_')
   payload=$(echo -n '{"iat":'$(date +%s)',"exp":'$(($(date +%s)+600))',"iss":"'$GITHUB_APP_ID'"}' | base64 | tr -d '\n=' | tr -- '+/' '-_')
-  signature=$(echo -n "$header.$payload" | openssl dgst -binary -sha256 -sign $GITHUB_APP_PK_PATH | openssl base64 | tr -d '\n=' | tr -- '+/' '-_')
+  signature=$(echo -n "$header.$payload" | openssl dgst -binary -sha256 -sign $GITHUB_APP_PK_FILE | openssl base64 | tr -d '\n=' | tr -- '+/' '-_')
   jwt="$header.$payload.$signature"
 
   installations_response=$(curl -X GET \
     -H "Authorization: Bearer $jwt" \
     -H "Accept: application/vnd.github.v3+json" \
     https://api.github.com/app/installations)
-  installation_id=$(echo $installations_response | jq '.[0].id')
+  installation_id=$(echo $installations_response | jq '.[] | select(.account.login == "'"$org"'") .id')
 
   token_response=$(curl -X POST \
     -H "Authorization: Bearer $jwt" \
@@ -62,11 +67,17 @@ function create-github-token() {
 
 function configure-git-access() {
 
+  git config --global --add safe.directory $dest_dir
   git config --global user.name "$git_user_name"
   git config --global user.email "$git_user_email"
-  git config --global --add safe.directory $dest_dir
 
   [ -z "$github_token" ] && return
+
+  gpg --import --batch $GITHUB_APP_SK_CONTENT_FILE
+  git config --global user.signingkey $GITHUB_APP_SK_ID
+  git config --global commit.gpgsign true
+  git config --global gpg.program /gpg.sh
+
   echo "$github_token" | gh auth login --with-token
   gh auth status
   gh auth setup-git
@@ -163,7 +174,7 @@ function push-and-create-pull-request() {
   cd ${dest_dir}
   # Add and commit changes
   git add -A
-  git commit -m "Update from template ${build_datetime_local}"
+  git commit -S -m "Update from template ${build_datetime_local}"
 
   [ -z "$github_token" ] && return
 
