@@ -1,5 +1,6 @@
 update-from-template:
   ignore:
+    - .github/workflows
     - scripts/config/repository-template.yaml
     - tests/.gitkeep
 
