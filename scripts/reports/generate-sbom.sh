@@ -32,8 +32,8 @@ function create-report() {
     --volume $PWD:/scan \
     ghcr.io/anchore/syft:$image_version \
       packages dir:/scan \
-      --config /scan/scripts/config/.syft.yaml \
-      --output spdx-json=/scan/sbom-report.tmp.json
+      --config /scan/scripts/config/syft.yaml \
+      --output spdx-json=/scan/sbom-repository-report.tmp.json
 }
 
 function enrich-report() {
@@ -52,9 +52,9 @@ function enrich-report() {
     --workdir /repo \
     ghcr.io/make-ops-tools/jq:latest \
       '.creationInfo |= . + {"created":"'${build_datetime}'","repository":{"url":"'${git_url}'","branch":"'${git_branch}'","tags":['${git_tags}'],"commitHash":"'${git_commit_hash}'"},"pipeline":{"id":'${pipeline_run_id}',"number":'${pipeline_run_number}',"attempt":'${pipeline_run_attempt}'}}' \
-      sbom-report.tmp.json \
-        > sbom-report.json
-  rm -f sbom-report.tmp.json
+      sbom-repository-report.tmp.json \
+        > sbom-repository-report.json
+  rm -f sbom-repository-report.tmp.json
 }
 
 function is_arg_true() {

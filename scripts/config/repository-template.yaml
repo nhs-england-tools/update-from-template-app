@@ -1,5 +1,6 @@
 update-from-template:
   ignore:
+    - scripts/config/repository-template.yaml
     - tests/.gitkeep
 
 version:

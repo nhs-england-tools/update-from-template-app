@@ -19,7 +19,7 @@ git_user_email=${GIT_USER_EMAIL:-"unknown@users.noreply.github.com"}
 
 GITHUB_APP_PK_FILE=$work_dir/gh_app_pk.pem
 if ! [ -f $GITHUB_APP_PK_FILE ]; then
-  echo "$GITHUB_APP_PK" > $GITHUB_APP_PK_FILE
+  echo "$GITHUB_APP_PK_CONTENT" > $GITHUB_APP_PK_FILE
 fi
 GITHUB_APP_SK_CONTENT_FILE=$work_dir/gh_app_sk.pem
 if ! [ -f $GITHUB_APP_SK_CONTENT_FILE ]; then
@@ -142,8 +142,8 @@ function produce-list-of-files-to-update() {
   /compare-directories \
     --source-dir ${src_dir} \
     --destination-dir ${dest_dir} \
-    --app-config-file /.config.yaml \
-    --template-config-file ${dest_dir}/scripts/config/.repository-template.yaml \
+    --app-config-file /update-from-template.yaml \
+    --template-config-file ${dest_dir}/scripts/config/repository-template.yaml \
   > $list_of_files_to_update_json
 }
 

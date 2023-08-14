@@ -19,8 +19,8 @@ inputs:
   github_app_id:
     description: "GitHub App ID"
     required: true
-  github_app_private_key:
-    description: "GitHub App private key"
+  github_app_private_key_content:
+    description: "GitHub App private key content"
     required: true
   github_app_commit_signing_key_id:
     description: "GitHub App commit signing key id"
@@ -41,7 +41,7 @@ runs:
     GIT_USER_NAME: ${{ inputs.git_user_name }}
     GIT_USER_EMAIL: ${{ inputs.git_user_email }}
     GITHUB_APP_ID: ${{ inputs.github_app_id }}
-    GITHUB_APP_PK: ${{ inputs.github_app_private_key }}
+    GITHUB_APP_PK_CONTENT: ${{ inputs.github_app_private_key_content }}
     GITHUB_APP_SK_ID: ${{ inputs.github_app_commit_signing_key_id }}
     GITHUB_APP_SK_CONTENT: ${{ inputs.github_app_commit_signing_key_content }}
     GITHUB_APP_SK_PASSPHRASE: ${{ inputs.github_app_commit_signing_key_passphrase }}
