@@ -174,7 +174,7 @@ function push-and-create-pull-request() {
   cd ${dest_dir}
   # Add and commit changes
   git add -A
-  git commit -S -m "Update from template ${build_datetime_local}"
+  git commit -m "Update from template ${build_datetime_local}"
 
   [ -z "$github_token" ] && return
 
