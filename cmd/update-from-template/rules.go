@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/nhs-england-tools/update-from-template-action/cmd/compare-directories/ignore"
+	"github.com/nhs-england-tools/update-from-template-action/cmd/update-from-template/ignore"
 )
 
 type Rules struct {

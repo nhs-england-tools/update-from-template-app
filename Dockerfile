@@ -8,7 +8,7 @@ RUN set -ex; \
     \
     CGO_ENABLED=0 GOOS=linux go build \
         -a -installsuffix cgo \
-        -o ./build/compare-directories ./cmd/compare-directories/
+        -o ./build/update-from-template ./cmd/update-from-template/
 
 # === Runtime ==================================================================
 
@@ -29,7 +29,7 @@ RUN set -ex; \
         jq \
         openssl \
         tzdata
-COPY --from=builder /github/workspace/build/compare-directories /
+COPY --from=builder /github/workspace/build/update-from-template /
 COPY --from=builder /github/workspace/entrypoint.sh /
 COPY --from=builder /github/workspace/gpg.sh /
 COPY --from=builder /github/workspace/scripts/config/update-from-template.yaml /update-from-template.yaml

@@ -7,7 +7,7 @@
 - Compliance
   - Implement metrics
   - Upload report
-- Simplify and optmise for speed `./cmd/compare-directories` implementation
+- Simplify and optmise for speed `cmd/update-from-template` implementation
 - In the action implementation reference image that is already built
 
 ## Releasing Changes from the Repository Template into target repositories

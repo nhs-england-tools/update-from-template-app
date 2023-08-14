@@ -139,7 +139,7 @@ function checkout-new-branch() {
 function produce-list-of-files-to-update() {
 
   cd ${dest_dir}
-  /compare-directories \
+  /update-from-template \
     --source-dir ${src_dir} \
     --destination-dir ${dest_dir} \
     --app-config-file /update-from-template.yaml \

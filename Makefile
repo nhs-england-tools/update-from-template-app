@@ -15,7 +15,7 @@ cmd-unit-test: # Run command-line tool unit tests
 
 cmd-contract-test: # Run command-line tool contract test - optional: DATASET=[test data set name, defaults to `small`]
 	# Act
-	go run ./cmd/compare-directories \
+	go run ./cmd/update-from-template \
 		--source-dir ./tests/data/$(or $(DATASET), small)/dir1 \
 		--destination-dir ./tests/data/$(or $(DATASET), small)/dir2 \
 		--app-config-file ./tests/data/.config-app.yaml \
@@ -27,11 +27,11 @@ cmd-contract-test: # Run command-line tool contract test - optional: DATASET=[te
 		-output=./tests/contract-test/output.json
 
 cmd-build: # Build command-line tool
-	go build -o ./build/compare-directories ./cmd/compare-directories/
-	test -x ./build/compare-directories
+	go build -o ./build/update-from-template ./cmd/update-from-template/
+	test -x ./build/update-from-template
 
 cmd-run: # Run command-line tool - optional: DATASET=[test data set name, defaults to `small`]
-	./build/compare-directories \
+	./build/update-from-template \
 		--source-dir ./tests/data/$(or $(DATASET), small)/dir1 \
 		--destination-dir ./tests/data/$(or $(DATASET), small)/dir2 \
 		--app-config-file ./tests/data/.config-app.yaml \
@@ -39,10 +39,13 @@ cmd-run: # Run command-line tool - optional: DATASET=[test data set name, defaul
 	| jq
 
 clean:: # Clean the project
-	rm -f \
-		./build/compare-directories \
-		./coverage.* \
-		./tests/contract-test/output.json
+	rm -rf \
+		.docker/repository-template \
+		.docker/repository-to-update \
+		.docker/update-from-template.json \
+		build/update-from-template \
+		coverage.* \
+		tests/contract-test/output.json
 
 config: # Configure development environment
 	make \
