@@ -5,9 +5,3 @@
 
 *.code-workspace
 !project.code-workspace
-
-coverage.html
-coverage.out
-
-.docker
-.version
