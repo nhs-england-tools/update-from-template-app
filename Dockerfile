@@ -32,5 +32,5 @@ RUN set -ex; \
 COPY --from=builder /github/workspace/build/compare-directories /
 COPY --from=builder /github/workspace/entrypoint.sh /
 COPY --from=builder /github/workspace/gpg.sh /
-COPY --from=builder /github/workspace/scripts/config/update-from-template.yaml /update-from-template.yaml.yaml
+COPY --from=builder /github/workspace/scripts/config/update-from-template.yaml /update-from-template.yaml
 ENTRYPOINT ["/entrypoint.sh"]
