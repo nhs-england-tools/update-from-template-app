@@ -60,7 +60,7 @@ make docker-test \
   GIT_USER_NAME="Update from Template App" \
   GIT_USER_EMAIL="update-from-template-app@users.noreply.github.com" \
   DRY_RUN=true \
-  VERBOSE=true
+  VERBOSE=false
 ```
 
 ## Architecture

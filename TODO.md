@@ -1,13 +1,15 @@
 # TODO
 
+- Specify repository template branch to be used
+- Move file operations from the shell script to `cmd/update-from-template`
+- Simplify and optmise for speed `cmd/update-from-template` implementation
 - Check [actions-template-sync/src/sync_template.sh](https://github.com/AndreasAugustin/actions-template-sync/blob/54cc6daa8773c61a6df312b2cb9f4f82ef72d690/src/sync_template.sh#L35C27-L35C49) implementation
 - Update documentation
 - Implement ability to run scripts in addition to the update rules
-- Create a list of repositories to be updated
+- Implement a feature for this app to run against repositories to be updated from template on schedule or on demand
 - Compliance
   - Implement metrics
   - Upload report
-- Simplify and optmise for speed `cmd/update-from-template` implementation
 - In the action implementation reference image that is already built
 
 ## Releasing Changes from the Repository Template into target repositories

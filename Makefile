@@ -1,8 +1,10 @@
+# This file is for you! Edit it to implement your own hooks (make targets) into
+# the project as automated steps to be executed on locally and in the CD pipeline.
+
 include ./scripts/init.mk
 include ./scripts/test.mk
-include ./scripts/docker/docker.mk
 
-# ==============================================================================
+# Example targets are: dependencies, build, publish, deploy, clean, etc.
 
 build: # Build the project
 	make \
@@ -38,7 +40,7 @@ cmd-run: # Run command-line tool - optional: DATASET=[test data set name, defaul
 		--template-config-file ./tests/data/.config-template.yaml \
 	| jq
 
-clean:: # Clean the project
+clean:: # Clean-up project resources
 	rm -rf \
 		.docker/repository-template \
 		.docker/repository-to-update \
@@ -47,20 +49,11 @@ clean:: # Clean the project
 		coverage.* \
 		tests/contract-test/output.json
 
-config: # Configure development environment
-	make \
-		asdf-install \
-		githooks-install
-
-# ==============================================================================
-
 .SILENT: \
 	clean \
 	build \
 	cmd-build \
 	cmd-contract-test \
-	cmd-integration-test \
-	cmd-performance-test \
 	cmd-run \
 	cmd-unit-test \
 	config
