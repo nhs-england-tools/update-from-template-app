@@ -56,6 +56,7 @@ Locally
 make docker-build
 make docker-test \
   REPOSITORY_TEMPLATE=github.com/nhs-england-tools/repository-template \
+  BRANCH_NAME=main \
   REPOSITORY_TO_UPDATE=github.com/nhs-england-tools/update-from-template-app \
   GIT_USER_NAME="Update from Template App" \
   GIT_USER_EMAIL="update-from-template-app@users.noreply.github.com" \

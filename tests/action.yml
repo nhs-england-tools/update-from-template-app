@@ -28,6 +28,7 @@ runs:
       with:
         build_datetime: "${{ inputs.build_datetime }}"
         repository_template: github.com/nhs-england-tools/repository-template
+        branch_name: "main"
         repository_to_update: github.com/nhs-england-tools/update-from-template-app
         git_user_name: "Update from Template App"
         git_user_email: "141863476+update-from-template-app@users.noreply.github.com"

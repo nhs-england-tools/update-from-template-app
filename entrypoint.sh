@@ -9,10 +9,13 @@ build_datetime_local=$(date --date="$datetime" +"%Y-%m-%dT%H:%M:%S%z")
 build_datetime=$datetime
 build_timestamp=$(date --date="$datetime" -u +"%Y%m%d%H%M%S")
 
+branch_name=${BRANCH_NAME:-"main"}
+org=$(echo "$REPOSITORY_TO_UPDATE" | cut -d'/' -f2)
+
 work_dir=/github/workspace
 src_dir=$work_dir/repository-template
 dest_dir=$work_dir/repository-to-update
-list_of_files_to_update_json=${work_dir}/update-from-template.json
+list_of_files_to_update_json=$work_dir/update-from-template.json
 
 git_user_name=${GIT_USER_NAME:-"unknown"}
 git_user_email=${GIT_USER_EMAIL:-"unknown@users.noreply.github.com"}
@@ -25,7 +28,6 @@ GITHUB_APP_SK_CONTENT_FILE=$work_dir/gh_app_sk.pem
 if ! [ -f $GITHUB_APP_SK_CONTENT_FILE ]; then
   echo "$GITHUB_APP_SK_CONTENT" > $GITHUB_APP_SK_CONTENT_FILE
 fi
-org=$(echo "${REPOSITORY_TO_UPDATE}" | cut -d'/' -f2)
 
 # ==============================================================================
 
@@ -112,13 +114,15 @@ function fetch-repositories-content() {
       )
     fi
   fi
+  cd $src_dir
+  git checkout $branch_name
 }
 
 function prune-legacy-updates() {
 
   [ -z "$github_token" ] && return
 
-  cd ${dest_dir}
+  cd $dest_dir
   # Close legacy PRs
   pr_numbers=$(gh pr list --search "Update from template" --json number,title | jq '.[] | select(.title | startswith("Update from template")).number')
   for pr_number in $pr_numbers; do
@@ -132,18 +136,18 @@ function prune-legacy-updates() {
 
 function checkout-new-branch() {
 
-  cd ${dest_dir}
+  cd $dest_dir
   git checkout -b update-from-template-${build_timestamp}
 }
 
 function produce-list-of-files-to-update() {
 
-  cd ${dest_dir}
+  cd $dest_dir
   /update-from-template \
-    --source-dir ${src_dir} \
-    --destination-dir ${dest_dir} \
+    --source-dir $src_dir \
+    --destination-dir $dest_dir \
     --app-config-file /update-from-template.yaml \
-    --template-config-file ${dest_dir}/scripts/config/repository-template.yaml \
+    --template-config-file $dest_dir/scripts/config/repository-template.yaml \
   > $list_of_files_to_update_json
 }
 
@@ -156,8 +160,8 @@ function update-files() {
   )
   echo "$to_update" | while IFS= read -r file; do
     dir=$(dirname "$file")
-    mkdir -p ${dest_dir}/$dir
-    cp ${src_dir}/$file ${dest_dir}/$file
+    mkdir -p $dest_dir/$dir
+    cp $src_dir/$file $dest_dir/$file
   done
   # Delete files
   to_delete=$(
@@ -165,13 +169,13 @@ function update-files() {
       | jq -r '.comparison | to_entries[] | select(.value.action == "delete") | .key'
   )
   echo "$to_delete" | while IFS= read -r file; do
-    rm -rf ${dest_dir}/$file
+    rm -rf $dest_dir/$file
   done
 }
 
 function push-and-create-pull-request() {
 
-  cd ${dest_dir}
+  cd $dest_dir
   # Add and commit changes
   git add -A
   git commit -m "Update from template ${build_datetime_local}"

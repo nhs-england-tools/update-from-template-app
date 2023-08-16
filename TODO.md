@@ -1,6 +1,5 @@
 # TODO
 
-- Specify repository template branch to be used
 - Move file operations from the shell script to `cmd/update-from-template`
 - Simplify and optmise for speed `cmd/update-from-template` implementation
 - Check [actions-template-sync/src/sync_template.sh](https://github.com/AndreasAugustin/actions-template-sync/blob/54cc6daa8773c61a6df312b2cb9f4f82ef72d690/src/sync_template.sh#L35C27-L35C49) implementation

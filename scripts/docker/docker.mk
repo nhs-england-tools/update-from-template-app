@@ -14,6 +14,7 @@ docker-test: # Test Docker image
 	source ./scripts/docker/docker.lib.sh
 	args=" \
 		-e REPOSITORY_TEMPLATE \
+		-e BRANCH_NAME \
 		-e REPOSITORY_TO_UPDATE \
 		-e GIT_USER_NAME \
 		-e GIT_USER_EMAIL \

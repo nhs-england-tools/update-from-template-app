@@ -7,6 +7,9 @@ inputs:
   repository_template:
     description: "Repository template"
     required: true
+  branch_name:
+    description: "Branch name from the template repository to use, default is 'main'"
+    required: false
   repository_to_update:
     description: "Repository to update"
     required: true
@@ -37,6 +40,7 @@ runs:
   env:
     BUILD_DATETIME: ${{ inputs.build_datetime }}
     REPOSITORY_TEMPLATE: ${{ inputs.repository_template }}
+    BRANCH_NAME: ${{ inputs.branch_name }}
     REPOSITORY_TO_UPDATE: ${{ inputs.repository_to_update }}
     GIT_USER_NAME: ${{ inputs.git_user_name }}
     GIT_USER_EMAIL: ${{ inputs.git_user_email }}
