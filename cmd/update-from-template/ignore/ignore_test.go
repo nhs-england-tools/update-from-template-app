@@ -114,7 +114,7 @@ func TestCompileIgnoreLines_HandleSpaces(t *testing.T) {
 # Another comment
 
 
-    # Invalid Comment
+		# Invalid Comment
 
 abc/def
 `)

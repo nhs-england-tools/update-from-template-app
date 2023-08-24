@@ -7,6 +7,9 @@ inputs:
   repository_template:
     description: "Repository template"
     required: true
+  branch_name:
+    description: "Branch name from the template repository to use, default is 'main'"
+    required: false
   repository_to_update:
     description: "Repository to update"
     required: true
@@ -19,8 +22,17 @@ inputs:
   github_app_id:
     description: "GitHub App ID"
     required: true
-  github_app_private_key:
-    description: "GitHub App private key"
+  github_app_private_key_content:
+    description: "GitHub App private key content"
+    required: true
+  github_app_commit_signing_key_id:
+    description: "GitHub App commit signing key id"
+    required: true
+  github_app_commit_signing_key_content:
+    description: "GitHub App commit signing key content"
+    required: true
+  github_app_commit_signing_key_passphrase:
+    description: "GitHub App commit signing key passphrase"
     required: true
 runs:
   using: "docker"
@@ -28,8 +40,12 @@ runs:
   env:
     BUILD_DATETIME: ${{ inputs.build_datetime }}
     REPOSITORY_TEMPLATE: ${{ inputs.repository_template }}
+    BRANCH_NAME: ${{ inputs.branch_name }}
     REPOSITORY_TO_UPDATE: ${{ inputs.repository_to_update }}
     GIT_USER_NAME: ${{ inputs.git_user_name }}
     GIT_USER_EMAIL: ${{ inputs.git_user_email }}
     GITHUB_APP_ID: ${{ inputs.github_app_id }}
-    GITHUB_APP_PK: ${{ inputs.github_app_private_key }}
+    GITHUB_APP_PK_CONTENT: ${{ inputs.github_app_private_key_content }}
+    GITHUB_APP_SK_ID: ${{ inputs.github_app_commit_signing_key_id }}
+    GITHUB_APP_SK_CONTENT: ${{ inputs.github_app_commit_signing_key_content }}
+    GITHUB_APP_SK_PASSPHRASE: ${{ inputs.github_app_commit_signing_key_passphrase }}

@@ -1,5 +1,9 @@
 update-from-template:
   ignore:
+    - .github/workflows
+    - scripts/config/repository-template.yaml
+    - scripts/docker/examples
+    - scripts/docker/tests
     - tests/.gitkeep
 
 version:

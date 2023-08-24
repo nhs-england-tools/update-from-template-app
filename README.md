@@ -50,6 +50,20 @@ The following software packages or their equivalents are expected to be installe
 
 After a successful installation, provide an informative example of how this project can be used. Additional code snippets, screenshots and demos work well in this space. You may also link to the other documentation resources, e.g. the [User Guide](./docs/user-guide.md) to demonstrate more use cases and to show more features.
 
+Locally
+
+```shell
+make docker-build
+make docker-test \
+  REPOSITORY_TEMPLATE=github.com/nhs-england-tools/repository-template \
+  BRANCH_NAME=main \
+  REPOSITORY_TO_UPDATE=github.com/nhs-england-tools/update-from-template-app \
+  GIT_USER_NAME="Update from Template App" \
+  GIT_USER_EMAIL="update-from-template-app@users.noreply.github.com" \
+  DRY_RUN=true \
+  VERBOSE=false
+```
+
 ## Architecture
 
 ### Diagrams
@@ -61,6 +75,14 @@ The [C4 model](https://c4model.com/) is a simple and intuitive way to create sof
 ### Configuration
 
 Most of the projects are built with customisability and extendability in mind. At a minimum, this can be achieved by implementing service level configuration options and settings. The intention of this section is to show how this can be used. If the system processes data, you could mention here for example how the input is prepared for testing - anonymised, synthetic or live data.
+
+GitHub secret variables
+
+- `UPDATE_FROM_TEMPLATE_GH_APP_ID`: GitHub App ID
+- `UPDATE_FROM_TEMPLATE_GH_APP_PK`: GitHub App private key
+- `UPDATE_FROM_TEMPLATE_GH_APP_SK_ID`: GitHub App commit signing key ID, this belongs to a bot account
+- `UPDATE_FROM_TEMPLATE_GH_APP_SK_CONTENT`: GitHub App commit signing key content, this belongs to a bot account
+- `UPDATE_FROM_TEMPLATE_GH_APP_SK_PASSPHRASE`: GitHub App commit signing key passphrase, this belongs to a bot account
 
 ## Contributing
 

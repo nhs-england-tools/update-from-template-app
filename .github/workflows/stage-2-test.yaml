@@ -13,11 +13,21 @@ on:
         type: string
     secrets:
       UPDATE_FROM_TEMPLATE_GH_APP_ID:
-        description: "GitHub App ID passed from the caller workflow"
+        description: "GitHub App ID"
         required: true
-      UPDATE_FROM_TEMPLATE_GH_APP_PK:
-        description: "GitHub App private key passed from the caller workflow"
+      UPDATE_FROM_TEMPLATE_GH_APP_PK_CONTENT:
+        description: "GitHub App private key content"
         required: true
+      UPDATE_FROM_TEMPLATE_GH_APP_SK_ID:
+        description: "GitHub App commit signing key ID"
+        required: true
+      UPDATE_FROM_TEMPLATE_GH_APP_SK_CONTENT:
+        description: "GitHub App commit signing key content"
+        required: true
+      UPDATE_FROM_TEMPLATE_GH_APP_SK_PASSPHRASE:
+        description: "GitHub App commit signing key passphrase"
+        required: true
+
 jobs:
   # cmd-unit-test:
   #   runs-on: ubuntu-latest
@@ -51,4 +61,7 @@ jobs:
         with:
           build_datetime: ${{ inputs.build_datetime }}
           github_app_id: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_ID }}"
-          github_app_private_key: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_PK }}"
+          github_app_private_key_content: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_PK_CONTENT }}"
+          github_app_commit_signing_key_id: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_SK_ID }}"
+          github_app_commit_signing_key_content: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_SK_CONTENT }}"
+          github_app_commit_signing_key_passphrase: "${{ secrets.UPDATE_FROM_TEMPLATE_GH_APP_SK_PASSPHRASE }}"
