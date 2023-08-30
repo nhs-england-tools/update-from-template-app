@@ -38,8 +38,7 @@ function main() {
   fetch-repositories-content
   prune-legacy-updates
   checkout-new-branch
-  produce-list-of-files-to-update
-  update-files
+  patch-target
   push-and-create-pull-request
 }
 
@@ -140,53 +139,23 @@ function checkout-new-branch() {
   git checkout -b update-from-template-${build_timestamp}
 }
 
-function produce-list-of-files-to-update() {
-
-  cd $dest_dir
-  /update-from-template \
-    --source-dir $src_dir \
-    --destination-dir $dest_dir \
-    --app-config-file /update-from-template.yaml \
-    --template-config-file $dest_dir/scripts/config/repository-template.yaml \
-  > $list_of_files_to_update_json
-}
-
-function update-files() {
-
-  # Update files
-  to_update=$(
-    cat $list_of_files_to_update_json \
-      | jq -r '.comparison | to_entries[] | select(.value.action == "update") | .key'
-  )
-  echo "$to_update" | while IFS= read -r file; do
-    dir=$(dirname "$file")
-    mkdir -p $dest_dir/$dir
-    cp $src_dir/$file $dest_dir/$file
-  done
-  # Delete files
-  to_delete=$(
-    cat $list_of_files_to_update_json \
-      | jq -r '.comparison | to_entries[] | select(.value.action == "delete") | .key'
-  )
-  echo "$to_delete" | while IFS= read -r file; do
-    rm -rf $dest_dir/$file
-  done
+function patch-target() {
+    ./patch-target.sh "${src_dir}" \
+		      "${dest_dir}" \
+		      "Update from template ${build_datetime_local}"
 }
 
 function push-and-create-pull-request() {
-
-  cd $dest_dir
-  # Add and commit changes
-  git add -A
-  git commit -m "Update from template ${build_datetime_local}"
 
   [ -z "$github_token" ] && return
 
   # Push and create new PR
   git push -u origin update-from-template-${build_timestamp}
+  # Get the commit message from the target repo log rather than reconstructing it
+  body=$(git log -1 --format=format:%s)
   gh pr create \
     --title "Update from template" \
-    --body "Update from template ${build_datetime_local}"
+    --body "$body"
 }
 
 function is-arg-true() {
