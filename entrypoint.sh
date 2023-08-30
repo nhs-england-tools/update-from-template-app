@@ -140,7 +140,9 @@ function checkout-new-branch() {
 }
 
 function patch-target() {
-    ./patch-target.sh "${src_dir}" "${dest_dir}" "${list_of_files_to_update_json}"
+    ./patch-target.sh "${src_dir}" \
+		      "${dest_dir}" \
+		      "Update from template ${build_datetime_local}"
 }
 
 function push-and-create-pull-request() {
@@ -149,9 +151,11 @@ function push-and-create-pull-request() {
 
   # Push and create new PR
   git push -u origin update-from-template-${build_timestamp}
+  # Get the commit message from the target repo log rather than reconstructing it
+  body=$(git log -1 --format=format:%s)
   gh pr create \
     --title "Update from template" \
-    --body "Update from template ${build_datetime_local}"
+    --body "$body"
 }
 
 function is-arg-true() {

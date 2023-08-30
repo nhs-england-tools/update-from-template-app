@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -21,21 +22,28 @@ func parseCommandLineArguments() (*Arguments, error) {
 	dir2 := flag.String("destination-dir", "", "Destination directory")
 	file1 := flag.String("app-config-file", "", "Configuration file of the Update from Template app")
 	file2 := flag.String("template-config-file", "", "Configuration file for the Repository Template update")
+	var err error = nil
+	
 	flag.Parse()
 	if *dir1 == "" || *dir2 == "" {
-		return &Arguments{}, fmt.Errorf("%s", "Please, provide both source and destination directory paths")
+		err = errors.Join(err, fmt.Errorf("Please provide both --source-dir and --destination-dir directory paths"))
 	}
 	if *file1 == "" {
-		return &Arguments{}, fmt.Errorf("%s", "Please, provide app configuration file path")
+		err = errors.Join(err, fmt.Errorf("Please provide --app-config-file path"))
 	}
 	if *file2 == "" {
-		return &Arguments{}, fmt.Errorf("%s", "Please, provide template configuration file path")
+		err = errors.Join(err, fmt.Errorf("Please provide --template-config-file path"))
 	}
 
-	return &Arguments{
-		SourceDirectory:           *dir1,
-		DestinationDirectory:      *dir2,
-		AppConfigurationFile:      *file1,
-		TemplateConfigurationFile: *file2,
-	}, nil
+	if err != nil {
+		return nil, err
+	} else {
+		
+		return &Arguments{
+			SourceDirectory:           *dir1,
+			DestinationDirectory:      *dir2,
+			AppConfigurationFile:      *file1,
+			TemplateConfigurationFile: *file2,
+		}, nil
+	}
 }

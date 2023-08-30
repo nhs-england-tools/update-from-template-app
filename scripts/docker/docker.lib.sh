@@ -25,7 +25,6 @@ function docker-build() {
   _create-effective-dockerfile
   _create-effective-version
   docker build \
-    --progress=plain \
     --platform linux/amd64 \
     --build-arg IMAGE="${DOCKER_IMAGE}" \
     --build-arg TITLE="${DOCKER_TITLE}" \

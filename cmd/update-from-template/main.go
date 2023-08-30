@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -50,9 +51,14 @@ func main() {
 	// Parse the command-line arguments
 	args, err := parseCommandLineArguments()
 	if err != nil {
-		log.Fatalf("Error while parsing command-line arguments: %s\n", err)
+		log.Fatalf("Error while parsing command-line arguments:\n%s\n", err)
 	}
 
+	err = validateArgs(args)
+	if err != nil {
+		log.Fatalf("Argument error:\n%v\n", err)
+	}
+	
 	// Parse the config file
 	config, err := parseConfigFiles(args.AppConfigurationFile, args.TemplateConfigurationFile)
 	if err != nil {
@@ -68,6 +74,32 @@ func main() {
 
 	result := compare(source, destination, &config.Rules)
 	printAsJson(result)
+}
+
+func fileExists(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil
+}
+
+func validateArgs(args *Arguments) error {
+	source := args.SourceDirectory
+	target := args.DestinationDirectory
+	var sourceError error = nil
+	var targetError error = nil
+	
+	if !fileExists(source) {
+		sourceError = fmt.Errorf("Source directory %s does not exist.", source)
+	} else if !fileExists(filepath.Join(source, ".git")) {
+		sourceError = fmt.Errorf("Source directory %s is not a git repository (or is bare).", source)
+	} 
+
+	if !fileExists(target) {
+		targetError = fmt.Errorf("Target directory %s does not exist.", target)
+	} else if !fileExists(filepath.Join(target, ".git")) {
+		targetError = fmt.Errorf("Target directory %s is not a git repository (or is bare).", target)
+	}
+
+	return errors.Join(sourceError, targetError)
 }
 
 func walk(dir1, dir2 *string) (map[string]FileInfo, map[string]FileInfo, error) {
