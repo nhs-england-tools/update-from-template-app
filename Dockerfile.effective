@@ -1,7 +1,7 @@
 # === Builder ==================================================================
 
 # `golang:latest` will be replaced with a specific version stored in ./.tool-versions
-FROM golang:1.21.0 as builder
+FROM golang:1.21.4 as builder
 WORKDIR /github/workspace
 COPY . .
 RUN set -ex; \
