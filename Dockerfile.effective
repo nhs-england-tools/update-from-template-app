@@ -13,7 +13,7 @@ RUN set -ex; \
 # === Runtime ==================================================================
 
 # `alpine:latest` will be replaced with a specific version stored in ./.tool-versions
-FROM alpine:3.18.3@sha256:c5c5fda71656f28e49ac9c5416b3643eaa6a108a8093151d6d1afc9463be8e33
+FROM alpine:3.19.0@sha256:51b67269f354137895d43f3b3d810bfacd3945438e94dc5ac55fdac340352f48
 ENV TZ=Europe/London
 RUN set -ex; \
     \
