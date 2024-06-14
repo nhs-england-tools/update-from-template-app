@@ -2,6 +2,7 @@
 
 The Update from Template App is a powerful GitHub App and Action designed to propagate changes made in a template repository to all repositories created from it. This action is particularly beneficial for maintaining consistency across multiple repositories, which were initially set up using the [template repository](https://github.com/nhs-england-tools/repository-template) in the NHS England GitHub organisations. This ensures that improvements, fixes or any updates to the template repository are automatically synchronised across all linked repositories, enhancing maintainability, ensuring consistency and helping with governance.
 
+
 ## Table of Contents
 
 - [Update from Template App](#update-from-template-app)
