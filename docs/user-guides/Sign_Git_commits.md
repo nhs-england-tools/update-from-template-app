@@ -25,7 +25,7 @@ There are two ways to sign commits in GitHub, using a GPG or an SSH signature. D
 ### Generate GPG key
 
 <!-- markdownlint-disable-next-line no-inline-html -->
-If you do not have it already generate a new pair of GPG keys. Please, change the passphrase (<span style="color:red">pleaseChooseYourKeyPassphrase</span>) below and save it in your password manager.
+If you do not have it already generate a new pair of GPG keys. Please change the passphrase (<span style="color:red">pleaseChooseYourKeyPassphrase</span>) below and save it in your password manager.
 
 ```shell
 USER_NAME="Your Name"
@@ -123,7 +123,7 @@ After completing these steps, your new signing key will be listed in the "**SSH 
 
 ### Troubleshooting
 
-If you receive the error message "error: gpg failed to sign the data", make sure you added `export GPG_TTY=$(tty)` to your `~/.zshrc` or `~/.bashrc`, and restarted your terminal.
+If you receive the error message `error: gpg failed to sign the data`, make sure you added `export GPG_TTY=$(tty)` to your `~/.zshrc` or `~/.bashrc`, and restarted your terminal.
 
 ```shell
 sed -i '/^export GPG_TTY/d' ~/.exports
